@@ -32,12 +32,10 @@ import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.log4j.BasicConfigurator;
-import org.apache.log4j.Level;
 
 import nl.vumc.trait.oc.connect.ConnectInfo;
 import nl.vumc.trait.oc.connect.OCConnectorException;
 import nl.vumc.trait.oc.odm.NSContext;
-import nl.vumc.trait.oc.util.Logger;
 
 /**
  * Skeleton for any program contained within this package. It provides and initializes
@@ -57,8 +55,6 @@ public abstract class Main {
 	protected XPathFactory xPathFactory;
 	/** xpath */
 	protected XPath xPath;
-	/** the logger to be used for logging output */
-	protected Logger logger;
 	/** credentials for OpenClinica web service calls */
 	protected ConnectInfo connectInfo;
 	/** CLI options */
@@ -84,9 +80,7 @@ public abstract class Main {
 		xPathFactory = XPathFactory.newInstance();
 		xPath = xPathFactory.newXPath();
 		xPath.setNamespaceContext(new NSContext()); // <- important too!
-		debug = false;
-		logger = Logger.getInstance();
-		logger.setLevel(Level.WARN);
+		debug = false;		
 		options = new Options();
 		parser = new PosixParser();
 	}
@@ -124,10 +118,7 @@ public abstract class Main {
 	 * @param debug debugging mode to set.
 	 */
 	public void setDebug(boolean debug) {
-		this.debug = debug;
-		if (debug) {
-			logger.setLevel(Level.DEBUG);
-		}
+		this.debug = debug;		
 	}
 
 	/**
@@ -189,6 +180,4 @@ public abstract class Main {
 	 * @throws Exception
 	 */
 	protected abstract void runCmd() throws Exception;
-
-
 }

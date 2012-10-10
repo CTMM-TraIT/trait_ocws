@@ -32,6 +32,8 @@ import nl.vumc.trait.oc.odm.ODMException;
 
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.ParseException;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
@@ -42,6 +44,8 @@ import org.xml.sax.SAXException;
  * @author Arjan van der Velde (a.vandervelde (at) xs4all.nl)
  */
 public class ImportODM extends Main {
+    
+        private Logger logger = LogManager.getLogger(ImportODM.class);
 
 	/** input file */
 	private String file;

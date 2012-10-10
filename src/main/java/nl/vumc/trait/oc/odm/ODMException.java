@@ -33,7 +33,7 @@ public class ODMException extends Exception {
 	}
 
 	/**
-	 * init exception with custom message and causing exception
+	 * Initialize exception with custom message and causing exception
 	 * @param arg0 error message
 	 * @param arg1 causing exception
 	 */
@@ -42,7 +42,7 @@ public class ODMException extends Exception {
 	}
 
 	/**
-	 * init exception wih custom message
+	 * Initialize exception with custom message
 	 * @param arg0 error message
 	 */
 	public ODMException(String arg0) {
@@ -50,7 +50,7 @@ public class ODMException extends Exception {
 	}
 
 	/**
-	 * init exception with causing exception
+	 * Initialize exception with causing exception
 	 * @param arg0 causing exception
 	 */
 	public ODMException(Throwable arg0) {

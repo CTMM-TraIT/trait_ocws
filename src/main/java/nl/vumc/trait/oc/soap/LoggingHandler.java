@@ -24,8 +24,8 @@ import javax.xml.soap.SOAPMessage;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
-
-import nl.vumc.trait.oc.util.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * A quick and dirty logging handler of SOAP messages.
@@ -34,14 +34,13 @@ import nl.vumc.trait.oc.util.Logger;
 public class LoggingHandler implements SOAPHandler<SOAPMessageContext> {
 	
 	/** Internal logger */
-	private Logger logger;
+	private Logger logger = LogManager.getLogger(LoggingHandler.class);
 
 	/**
 	 * Create the handler
 	 */
 	public LoggingHandler() {
 		super();
-		logger = Logger.getInstance();
 	}
 
 	@Override
@@ -86,5 +85,4 @@ public class LoggingHandler implements SOAPHandler<SOAPMessageContext> {
 		// Not required for logging
 		return null;
 	}
-
 }

@@ -19,7 +19,6 @@
 package nl.vumc.trait.oc.soap;
 
 import java.util.Set;
-
 import javax.xml.namespace.QName;
 import javax.xml.soap.SOAPElement;
 import javax.xml.soap.SOAPEnvelope;
@@ -27,8 +26,8 @@ import javax.xml.soap.SOAPHeader;
 import javax.xml.ws.handler.MessageContext;
 import javax.xml.ws.handler.soap.SOAPHandler;
 import javax.xml.ws.handler.soap.SOAPMessageContext;
-
-import nl.vumc.trait.oc.util.Logger;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * Message handler that adds a WSSE security section to the SOAP Header.
@@ -41,15 +40,14 @@ public final class WsseSecurityHandler implements SOAPHandler<SOAPMessageContext
 	/** password */
 	private String password;
 	/** logger used for logging */
-	private Logger logger;
+	private Logger logger = LogManager.getLogger(WsseSecurityHandler.class);
 
 	/**
 	 * Construct the handler with empty username and empty password
 	 */
 	public WsseSecurityHandler() {
 		setUsername("");
-		setPassword("");
-		logger = Logger.getInstance();
+		setPassword("");		
 	}
 
 	/**
@@ -60,8 +58,7 @@ public final class WsseSecurityHandler implements SOAPHandler<SOAPMessageContext
 	public WsseSecurityHandler(String username, String password) {
 		super();
 		this.username = username;
-		this.password = password;
-		logger = Logger.getInstance();
+		this.password = password;		
 	}
 
 	/**
@@ -115,8 +112,9 @@ public final class WsseSecurityHandler implements SOAPHandler<SOAPMessageContext
 				final SOAPEnvelope envelope = msgCtx.getMessage().getSOAPPart().getEnvelope();
 				// Header may or may not exist yet
 				SOAPHeader header = envelope.getHeader();
-				if (header == null)
+				if (header == null) {
 					header = envelope.addHeader();
+                                }
 				// Add WSS Usertoken Element Tree
 				final SOAPElement security = header.addChildElement("Security", "wsse",
 						"http://docs.oasis-open.org/wss/2004/01/oasis-200401-wss-wssecurity-secext-1.0.xsd");

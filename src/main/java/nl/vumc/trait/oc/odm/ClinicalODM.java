@@ -26,6 +26,8 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -39,6 +41,8 @@ import org.w3c.dom.NodeList;
  * 
  */
 public class ClinicalODM extends AbstractODM {
+    
+        private static Logger logger = LogManager.getLogger(ClinicalODM.class);
 
 	/** clean on instantiation or not */
 	protected static final boolean DEFAULT_CLEANING = true;

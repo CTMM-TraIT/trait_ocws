@@ -20,16 +20,13 @@ package nl.vumc.trait.oc.main;
 
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
-
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.parsers.ParserConfigurationException;
-
 import nl.vumc.trait.oc.connect.OCConnectorException;
 import nl.vumc.trait.oc.connect.OCWebServices;
 import nl.vumc.trait.oc.odm.AbstractODM;
 import nl.vumc.trait.oc.odm.ODMException;
 import nl.vumc.trait.oc.types.Study;
-
 import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.ParseException;
 import org.xml.sax.SAXException;

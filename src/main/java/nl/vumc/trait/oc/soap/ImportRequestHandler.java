@@ -67,17 +67,17 @@ public class ImportRequestHandler implements SOAPHandler<SOAPMessageContext> {
 	/**
 	 * Namespace of the importRequest element
 	 */
-	private final String IMPORT_ELEMENT_NS = "http://openclinica.org/ws/data/v1";
+	private static final String IMPORT_ELEMENT_NS = "http://openclinica.org/ws/data/v1";
 
 	/**
 	 * Name of the importRequest element
 	 */
-	private final String IMPORT_ELEMENT = "importRequest";
+	private static final String IMPORT_ELEMENT = "importRequest";
 
 	/**
 	 * Location of the ODM cleaning XSL template
 	 */
-	private final String ODM_XSLT = "/nl/vumc/trait/oc/transformations/CleanODMImport.xslt";
+	private static final String ODM_XSLT = "/nl/vumc/trait/oc/transformations/CleanODMImport.xslt";
 
 	/**
 	 * ODM Cleaning option

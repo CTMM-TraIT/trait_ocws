@@ -41,15 +41,15 @@ import org.w3c.dom.NodeList;
 public class StudySubjectHandler implements SOAPHandler<SOAPMessageContext> {
 
 	/** StubjectSubject faulty createResponse namespace */
-	private final String STUDYSUBJECT_NS = "http://openclinica.org/ws/studySubject/v1";
+	private static final String STUDYSUBJECT_NS = "http://openclinica.org/ws/studySubject/v1";
 	/** StubjectSubject faulty createResponse tag */
-	private final String STUDYSUBJECT_CREATE_RESPONSE = "createResponse";
+	private static final String STUDYSUBJECT_CREATE_RESPONSE = "createResponse";
 	/** subjectOID */
-	private final String SUBJECTOID = "subjectOID";
+	private static final String SUBJECTOID = "subjectOID";
 	/** subjectOID */
-	private final String STUDYSUBJECTOID = "studySubjectOID";
+	private static final String STUDYSUBJECTOID = "studySubjectOID";
 	/** target name */
-	private final String STUDYSUBJECT_ISSSRESPONSE = "isStudySubjectResponse";
+	private static final String STUDYSUBJECT_ISSSRESPONSE = "isStudySubjectResponse";
 
 	/**
 	 * Messages

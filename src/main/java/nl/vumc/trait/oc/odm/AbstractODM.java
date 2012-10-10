@@ -21,7 +21,6 @@ package nl.vumc.trait.oc.odm;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
-
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -32,9 +31,6 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
-
-import nl.vumc.trait.oc.util.Logger;
-
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
@@ -50,9 +46,6 @@ public abstract class AbstractODM {
 
 	/** The ODM DOM Document */
 	protected Document odm;
-	/** Logger to be used for logging */
-	protected Logger logger;
-	
 	/**
 	 * Document Builder Factory, set to be namespace aware in default
 	 * constructor
@@ -84,7 +77,6 @@ public abstract class AbstractODM {
 		} catch (Exception e) {
 			throw new ODMException("Cannot instantiate ODM object.", e);
 		}
-		logger = Logger.getInstance();
 	}
 
 	/**

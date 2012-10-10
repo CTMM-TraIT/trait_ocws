@@ -20,12 +20,12 @@ package nl.vumc.trait.oc.types;
 
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.datatype.DatatypeConstants;
 import javax.xml.datatype.DatatypeFactory;
 import javax.xml.datatype.XMLGregorianCalendar;
-
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.openclinica.ws.beans.StudySubjectWithEventsType;
 
 /**
@@ -33,6 +33,8 @@ import org.openclinica.ws.beans.StudySubjectWithEventsType;
  * @author Arjan van der Velde (a.vandervelde (at) xs4all.nl)
  */
 public class StudySubject {
+    
+        private Logger logger = LogManager.getLogger(StudySubject.class);
 
 	/** XML data type factory */
 	private DatatypeFactory dataTypeFactory;
@@ -80,7 +82,7 @@ public class StudySubject {
 	 * Update this study subject from a OC StudySubjectWithEventsType object
 	 * @param subject the OC StudySubjectWithEventsType to use
 	 */
-	public void updateStudySubject(StudySubjectWithEventsType subject) {
+	public final void updateStudySubject(StudySubjectWithEventsType subject) {
 		this.personID = subject.getSubject().getUniqueIdentifier();
 		this.sex = subject.getSubject().getGender().value();
 		this.studySubjectLabel = subject.getLabel();
@@ -158,6 +160,7 @@ public class StudySubject {
 	 * @param dateOfBirth dateOfBirth as String (yyyy-mm-dd)
 	 */
 	public void setDateOfBirth(String dateOfBirth) {
+                logger.debug("Setting DOB : '" + dateOfBirth + "'");
 		setDateOfBirth(dataTypeFactory.newXMLGregorianCalendar(dateOfBirth));
 	}
 

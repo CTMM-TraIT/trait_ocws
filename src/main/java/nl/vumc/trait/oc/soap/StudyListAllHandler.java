@@ -46,13 +46,13 @@ import org.w3c.dom.NodeList;
 public class StudyListAllHandler implements SOAPHandler<SOAPMessageContext> {
 
 	/** OpenClinica namespace for study */
-	private final String STUDIES_NS = "http://openclinica.org/ws/study/v1";
+	private static final String STUDIES_NS = "http://openclinica.org/ws/study/v1";
 	/** Target namespace -- the correct beans namespace */
-	private final String STUDIES_TARGET_NS = "http://openclinica.org/ws/beans";
+	private static final String STUDIES_TARGET_NS = "http://openclinica.org/ws/beans";
 	/** The "root" element for renaming... */
-	private final String STUDIES_ELEMENT = "studies";
+	private static final String STUDIES_ELEMENT = "studies";
 	/** ListAllResponse */
-	private final String STUDY_LIST_ALL_RESPONSE = "listAllResponse";
+	private static final String STUDY_LIST_ALL_RESPONSE = "listAllResponse";
 
 	/**
 	 * Messages

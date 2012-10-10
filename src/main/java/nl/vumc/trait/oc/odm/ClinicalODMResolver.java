@@ -20,15 +20,14 @@ package nl.vumc.trait.oc.odm;
 
 import java.util.Collection;
 import java.util.HashMap;
-
 import javax.xml.datatype.DatatypeConfigurationException;
-
 import nl.vumc.trait.oc.connect.OCConnectorException;
 import nl.vumc.trait.oc.connect.OCWebServices;
 import nl.vumc.trait.oc.types.ScheduledEvent;
 import nl.vumc.trait.oc.types.Study;
 import nl.vumc.trait.oc.types.StudySubject;
-
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.openclinica.ws.study.v1.ListAllResponse;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -42,6 +41,8 @@ import org.w3c.dom.NodeList;
  * 
  */
 public class ClinicalODMResolver extends ClinicalODM {
+    
+        private Logger logger = LogManager.getLogger(ClinicalODMResolver.class);
 	
 	// TODO: too many constructors here :S
 
@@ -75,14 +76,14 @@ public class ClinicalODMResolver extends ClinicalODM {
 	/** XPath Query: All attributes that do not have their value set to '<VALUE>' */
 	private final String XPATH_SUBJECT_ATTRS = "./@*[.!='<VALUE>']";
 
-	/** studie index. Study objects, keyed by studyname + sitename */
+	/** study index. Study objects, keyed by study name + site name */
 	protected HashMap<String, Study> studies; // // <unique id (study name + sitename), study object>
 	
 	/** OC web services connector */
 	private OCWebServices connector;
 
 	/**
-	 * Init ClinicalODMResolver.
+	 * Constructor.
 	 * @param ocConnector OpenClinica web services
 	 * @throws ODMException
 	 */
@@ -172,7 +173,7 @@ public class ClinicalODMResolver extends ClinicalODM {
 	}
 
 	/**
-	 * Creatr StudySubject from SubjectData ODM element.
+	 * Create StudySubject from SubjectData ODM element.
 	 * @param study study the subject belongs to
 	 * @param subjectDataNode the node to be translated
 	 * @return a StudySubject object based on the SubjectData element supplied
@@ -389,6 +390,4 @@ public class ClinicalODMResolver extends ClinicalODM {
 	public void setConnector(OCWebServices connector) {
 		this.connector = connector;
 	}
-
-
 }

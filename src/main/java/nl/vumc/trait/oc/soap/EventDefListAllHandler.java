@@ -46,13 +46,13 @@ import org.w3c.dom.NodeList;
 public class EventDefListAllHandler implements SOAPHandler<SOAPMessageContext> {
 
 	/** OpenClinica namespace for study event def */
-	private final String EVENTDEF_NS = "http://openclinica.org/ws/studyEventDefinition/v1";
+	private static final String EVENTDEF_NS = "http://openclinica.org/ws/studyEventDefinition/v1";
 	/** Target namespace -- the correct beans namespace */
-	private final String EVENTDEF_TARGET_NS = "http://openclinica.org/ws/beans";
+	private static final String EVENTDEF_TARGET_NS = "http://openclinica.org/ws/beans";
 	/** The "root" element for renaming... */
-	private final String EVENTDEF_ELEMENT = "studyEventDefinition";
+	private static final String EVENTDEF_ELEMENT = "studyEventDefinition";
 	/** ListAllResponse */
-	private final String EVENTDEF_LIST_ALL_RESPONSE = "listAllResponse";
+	private static final String EVENTDEF_LIST_ALL_RESPONSE = "listAllResponse";
 
 	/**
 	 * Messages
