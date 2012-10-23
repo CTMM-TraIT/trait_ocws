@@ -22,7 +22,7 @@
 # 2012, VU Medical Center Amsterdam
 # Author: Arjan van der Velde 
 
-JARFILE="project.build.jarName.jar"
+JARFILE="project.build.jarName"
 
 if [ "X$OC_URL" != "X" ]; then
 	OC_URL=-b"$OC_URL"

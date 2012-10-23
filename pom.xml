@@ -14,7 +14,7 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <project.build.jarName>${project.artifactId}-${project.version}</project.build.jarName>
+        <project.build.jarName>${project.artifactId}-${project.version}.jar</project.build.jarName>
     </properties>
     <reporting>
         <plugins>
@@ -42,10 +42,28 @@
                             <excludeTransitive>true</excludeTransitive>
                             <excludeArtifactIds>junit</excludeArtifactIds>
                         </configuration>
+                    </execution>                                                            
+                </executions>
+            </plugin>
+            <plugin>
+                <artifactId>maven-antrun-plugin</artifactId>
+                <version>1.7</version>
+                <executions>
+                    <execution>
+                        <phase>install</phase>
+                        <configuration>
+                            <tasks>
+                                <copy file="${project.build.directory}/${project.build.jarName}" 
+                              tofile="${project.basedir}/distribution/${project.build.jarName}"/>
+                            </tasks>
+                        </configuration>
+                        <goals>
+                            <goal>run</goal>
+                        </goals>
                     </execution>
                 </executions>
             </plugin>
-            
+
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -59,7 +77,7 @@
                             <addClasspath>true</addClasspath>
                             <classpathPrefix>lib/</classpathPrefix>
                         </manifest>
-                    </archive>
+                    </archive>     
                 </configuration>
             </plugin>
             
