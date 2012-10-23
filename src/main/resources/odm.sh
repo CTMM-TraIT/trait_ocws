@@ -22,7 +22,7 @@
 # 2012, VU Medical Center Amsterdam
 # Author: Arjan van der Velde 
 
-JARFILE="project.build.jarName"
+JARFILE="project.build.jarName:log4j.jar:commons-cli.jar"
 
 if [ "X$OC_URL" != "X" ]; then
 	OC_URL=-b"$OC_URL"

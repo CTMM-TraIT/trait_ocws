@@ -38,9 +38,10 @@
                             <goal>copy-dependencies</goal>
                         </goals>
                         <configuration>
-                            <outputDirectory>${project.build.outputDirectory}/lib</outputDirectory>
+                            <outputDirectory>${project.build.outputDirectory}</outputDirectory>
                             <excludeTransitive>true</excludeTransitive>
                             <excludeArtifactIds>junit</excludeArtifactIds>
+                            <stripVersion>true</stripVersion>
                         </configuration>
                     </execution>                                                            
                 </executions>
@@ -52,18 +53,17 @@
                     <execution>
                         <phase>install</phase>
                         <configuration>
-                            <tasks>
+                            <target>
                                 <copy file="${project.build.directory}/${project.build.jarName}" 
-                              tofile="${project.basedir}/distribution/${project.build.jarName}"/>
-                            </tasks>
+                                      tofile="${project.basedir}/distribution/${project.build.jarName}"/>
+                            </target>
                         </configuration>
                         <goals>
                             <goal>run</goal>
                         </goals>
                     </execution>
                 </executions>
-            </plugin>
-
+            </plugin>    
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-jar-plugin</artifactId>
@@ -74,13 +74,11 @@
                             <mainClass>main class</mainClass>
                         </manifest>
                         <manifest>
-                            <addClasspath>true</addClasspath>
-                            <classpathPrefix>lib/</classpathPrefix>
+                            <addClasspath>true</addClasspath>                            
                         </manifest>
                     </archive>     
                 </configuration>
             </plugin>
-            
             <plugin>
                 <groupId>com.google.code.maven-replacer-plugin</groupId>
                 <artifactId>replacer</artifactId>
