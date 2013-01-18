@@ -142,7 +142,9 @@ public class ImportODM extends Main {
 			logger.debug("ImportODM.process(): batches: " + resolvers.keySet());
 			throw new OCConnectorException("No resolver for batch '" + batch + "'!");
 		}
-		resolver.setOdm(documentBuilder.parse(reader));
+                Document odmDocument = documentBuilder.parse(reader);
+                logger.debug("Parsed ODM-document: " + odmDocument.toString());
+		resolver.setOdm(odmDocument);
 		resolver.resolveOdmDocument();
 		String resolvedODM = resolver.toString();
 		Document odmDoc = resolver.getOdm();
@@ -156,7 +158,7 @@ public class ImportODM extends Main {
 			odmNode.appendChild(clinicalDatas.item(i));
 			logger.debug("============================ setOdm start =================");
 			resolver.setOdm(odmDoc); // important!
-			logger.debug("Current ODM:\n" + resolver.extraClean().toString());
+			System.out.println("Current ODM:\n" + resolver.extraClean().toString());
 			logger.debug("============================ setOdm end ===================");
 			logger.debug("connector.import..... start");
 			logger.debug("connector.import..... connector: " + resolver.getConnector());

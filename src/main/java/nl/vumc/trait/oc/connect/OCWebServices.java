@@ -23,17 +23,16 @@ import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.parsers.ParserConfigurationException;
-
 import nl.vumc.trait.oc.odm.MetadataODM;
 import nl.vumc.trait.oc.odm.ODMException;
 import nl.vumc.trait.oc.types.Event;
 import nl.vumc.trait.oc.types.ScheduledEvent;
 import nl.vumc.trait.oc.types.Study;
 import nl.vumc.trait.oc.types.StudySubject;
-
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 import org.openclinica.ws.beans.EventType;
 import org.openclinica.ws.beans.GenderType;
 import org.openclinica.ws.beans.ListStudySubjectsInStudyType;
@@ -68,6 +67,8 @@ import org.xml.sax.SAXException;
  */
 public class OCWebServices extends OCConnector {
 
+        private Logger logger = LogManager.getLogger(OCWebServices.class);
+    
 	// ================================================================================================================
 
 	// we are a connector. implement the obliged stuff here...
@@ -198,8 +199,7 @@ public class OCWebServices extends OCConnector {
 	 * @throws DatatypeConfigurationException
 	 * @throws OCConnectorException
 	 */
-	public IsStudySubjectResponse isStudySubject(StudySubject studySubject, boolean submitDate)
-			throws DatatypeConfigurationException, OCConnectorException {
+	public IsStudySubjectResponse isStudySubject(StudySubject studySubject, boolean submitDate) throws OCConnectorException {
 		// TODO: catch errors (see listAllByStudy)
 		Study study = studySubject.getStudy();
 		IsStudySubjectRequest request = new IsStudySubjectRequest();
@@ -229,8 +229,7 @@ public class OCWebServices extends OCConnector {
 	 * @throws DatatypeConfigurationException
 	 * @throws OCConnectorException
 	 */
-	public IsStudySubjectResponse isStudySubject(StudySubject studySubject) throws DatatypeConfigurationException,
-			OCConnectorException {
+	public IsStudySubjectResponse isStudySubject(StudySubject studySubject) throws OCConnectorException {
 		return isStudySubject(studySubject, true);
 	}
 
@@ -242,8 +241,7 @@ public class OCWebServices extends OCConnector {
 	 * @throws OCConnectorException
 	 */
 	public ScheduleResponse scheduleEvent(StudySubject studySubject, ScheduledEvent scheduledEvent)
-			throws OCConnectorException {
-		// TODO: catch errors (see listAllByStudy)
+			throws OCConnectorException {	
 		// set event date
 		Study study = studySubject.getStudy();
 		StudyRefType studyRef = new StudyRefType();
@@ -255,9 +253,9 @@ public class OCWebServices extends OCConnector {
 		event.setStudyRef(studyRef);
 		event.setStudySubjectRef(studySubjectRef);
 		event.setEventDefinitionOID(scheduledEvent.getEventOID());
-		event.setLocation("N/A"); // hmm, why is this required? the UI does not
-									// enforce it.
-		ScheduleRequest scheduleRequest = new ScheduleRequest();
+		event.setLocation("N/A"); // hmm, why is this required? 
+                                          // the UI does not enforce it.		                                
+                ScheduleRequest scheduleRequest = new ScheduleRequest();
 		scheduleRequest.getEvent().add(event);
 		if (study.hasSiteName()) {
 			SiteRefType siteref = new SiteRefType();
@@ -265,7 +263,10 @@ public class OCWebServices extends OCConnector {
 			studyRef.setSiteRef(siteref);
 		}
 		ScheduleResponse scheduleResponse = eventBinding.schedule(scheduleRequest);
-		checkResponseExceptions(scheduleResponse.getResult(), scheduleResponse.getError());
+		checkResponseExceptions(scheduleResponse.getResult(), scheduleResponse.getError());                
+                logger.info("Scheduled event " + scheduleResponse.getEventDefinitionOID() + 
+                        " for subject " + scheduleResponse.getStudySubjectOID() + 
+                        " with ordinal + " + scheduleResponse.getStudyEventOrdinal());                
 		return scheduleResponse;
 	}
 
@@ -276,8 +277,7 @@ public class OCWebServices extends OCConnector {
 	 * @throws DatatypeConfigurationException
 	 * @throws OCConnectorException
 	 */
-	public CreateResponse createStudySubject(StudySubject studySubject) throws DatatypeConfigurationException,
-			OCConnectorException {
+	public CreateResponse createStudySubject(StudySubject studySubject) throws OCConnectorException {
 		// TODO: catch errors (see listAllByStudy)
 
 		Study study = studySubject.getStudy();
@@ -313,23 +313,28 @@ public class OCWebServices extends OCConnector {
 		studySubject.setStudySubjectLabel(createResponse.getLabel());
 		return createResponse;
 	}
-
+              
 	/**
 	 * Call the data import OpenClinica method dataImport() submitting ODM as a string. 
+         * The ODM-string is guaranteed by the callers to contain the relevant 
+         * clinical data axis (Study, Event etc) and one and only one ClinicaData
+         * node. See the calling methods in both ImportODM classes.
+         * 
+         * 
 	 * @param odm The ODM to be loaded. NB: OpenClinica has limited support for direct data loading.
-	 * @return OpenClinica reponse.
+	 * @return ImportResponse response.
 	 * @throws OCConnectorException
 	 */
 	public ImportResponse importODM(String odm) throws OCConnectorException {
 		// TODO: catch errors (see listAllByStudy) (also, this method looks a
 		// bit short...)
 		// TODO: See OC manual on limitations which are the main motivation
-		// for this code in the first place
+		// for this code in the first place                		            
 		ImportResponse response = dataBinding.dataImport(odm);
 		checkResponseExceptions(response.getResult(), response.getError());
 		return response;
 	}
-
+        
 	/**
 	 * Check whether a specific event has been scheduled for a given study subject based on the event's OID.
 	 * @param studySubject the study subject to check for. an exception is raised in case the subject does not exist.
@@ -345,8 +350,7 @@ public class OCWebServices extends OCConnector {
 		boolean isSubject = false;
 		if (subjects.getStudySubjects().getStudySubject() != null) {
 			for (StudySubjectWithEventsType subject : subjects.getStudySubjects().getStudySubject()) {
-				if (subject.getLabel().equals(studySubject.getStudySubjectLabel())
-						&& subject.getEnrollmentDate().equals(studySubject.getDateOfRegistration())) {
+				if (subject.getLabel().equals(studySubject.getStudySubjectLabel())) {
 					isSubject = true;
 					if (subject.getEvents().getEvent() != null) {
 						for (EventType event : subject.getEvents().getEvent()) {
@@ -365,7 +369,7 @@ public class OCWebServices extends OCConnector {
 		}
 		return false;
 	}
-
+        
 	/**
 	 * Retrieve the metadata ODM for a given study.
 	 * @param study the study to retrieve metadata for.
@@ -395,8 +399,7 @@ public class OCWebServices extends OCConnector {
 	 * @throws OCConnectorException
 	 * @throws DatatypeConfigurationException
 	 */
-	public ArrayList<Event> fetchEventDefinitions(Study study) throws OCConnectorException,
-			DatatypeConfigurationException {
+	public ArrayList<Event> fetchEventDefinitions(Study study) throws OCConnectorException {
 		// TODO: catch errors (see listAllByStudy)
 		ArrayList<Event> result = new ArrayList<Event>();
 		StudyEventDefinitionListAllType studyEventDefinitionListAllType = new StudyEventDefinitionListAllType();
@@ -419,7 +422,20 @@ public class OCWebServices extends OCConnector {
 		}
 		return result;
 	}
-
+        
+        /**
+         * Verifies a a subject with an identifier is enrolled in a study. 
+         * Aborts with an exception if this is not the case
+         * @param aStudy the study
+         * @param aSubjectIdentifier the subject
+         * @throws OCConnectorException
+         */
+        public void verfiySubjectIsInStudy(Study aStudy, StudySubject aSubject) throws OCConnectorException {                        
+            // isStudySubject throws an exception if the subject does not exist.
+            IsStudySubjectResponse response = isStudySubject(aSubject);
+            checkResponseExceptions(response.getResult(), response.getError());
+        }
+                       
 	/**
 	 * Find a study based on either a OID or a study name by calling the OpenClinica
 	 * listAllStudies() method. (so, this method performs a WS call. Used the overloaded
@@ -502,7 +518,7 @@ public class OCWebServices extends OCConnector {
 	 * @throws OCConnectorException
 	 * @throws DatatypeConfigurationException
 	 */
-	public void populateStudy(Study study) throws OCConnectorException, DatatypeConfigurationException {
+	public void populateStudy(Study study) throws OCConnectorException {
 		populateStudy(study, false, false);
 	}
 
@@ -519,7 +535,7 @@ public class OCWebServices extends OCConnector {
 	 * @throws DatatypeConfigurationException
 	 */
 	public void populateStudy(Study study, boolean fetchOIDs, boolean updateExistingSubjects)
-			throws OCConnectorException, DatatypeConfigurationException {
+			throws OCConnectorException {
 		HashMap<String, StudySubject> subjectLabels = new HashMap<String, StudySubject>();
 		study.setEvents(null);
 		if (!updateExistingSubjects) {
@@ -573,7 +589,7 @@ public class OCWebServices extends OCConnector {
 	 * @throws DatatypeConfigurationException
 	 * @throws OCConnectorException
 	 */
-	public void updateOID(StudySubject subject) throws DatatypeConfigurationException, OCConnectorException   {
+	public void updateOID(StudySubject subject) throws OCConnectorException   {
 		IsStudySubjectResponse response = isStudySubject(subject);
 		subject.setStudySubjectOID(response.getStudySubjectOID());
 	}

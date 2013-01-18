@@ -44,9 +44,14 @@ public class ScheduledEvent extends Event {
 	 * create a new event
 	 * @throws DatatypeConfigurationException
 	 */
-	public ScheduledEvent() throws DatatypeConfigurationException {
+	public ScheduledEvent() {
 		super();
-		dataTypeFactory = DatatypeFactory.newInstance();
+                try {
+                    dataTypeFactory = DatatypeFactory.newInstance();
+                }
+                catch (DatatypeConfigurationException dce) {
+                    throw new IllegalStateException("Unable to create scheduledEvent. Cause:\n", dce);
+                }
 		startDate = dataTypeFactory.newXMLGregorianCalendar(new GregorianCalendar());
 		startDate.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
 	}
@@ -56,7 +61,7 @@ public class ScheduledEvent extends Event {
 	 * @param event event
 	 * @throws DatatypeConfigurationException
 	 */
-	public ScheduledEvent(Event event) throws DatatypeConfigurationException {
+	public ScheduledEvent(Event event) {
 		this();
 		this.eventOID = event.getEventOID();
 		this.eventName = event.getEventName();
@@ -67,7 +72,7 @@ public class ScheduledEvent extends Event {
 	 * @param event the OC event to initialize from
 	 * @throws DatatypeConfigurationException
 	 */
-	public ScheduledEvent(EventType event) throws DatatypeConfigurationException {
+	public ScheduledEvent(EventType event) {
 		this();
 		setStartDate(event.getStartDate());
 		setEndDate(event.getEndDate());
@@ -133,5 +138,4 @@ public class ScheduledEvent extends Event {
 		return "ScheduledEvent: eventName: " + eventName + ", eventOID: " + eventOID + ", startDate: " + startDate
 				+ ", endDate: " + endDate;
 	}
-
 }

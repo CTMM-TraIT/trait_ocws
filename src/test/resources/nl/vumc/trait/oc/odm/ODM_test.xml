@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ODM xmlns:Mirth="http://www.vumc.nl/trait/odm/mirth/v0.1" 	 
+	 xmlns:OpenClinica="http://www.openclinica.org/ns/odm_ext_v130/v3.1" 
+	 xmlns:cdisc="http://www.cdisc.org/ns/odm/v1.3"
+	 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	 xsi:schemaLocation="http://www.cdisc.org/ns/odm/v1.3 ODM1-3.xsd"
+         Mirth:PreliminaryConsistencyCheck="false"
+	 ODMVersion="1.3" FileOID="1D20080412202420" FileType="Snapshot"
+	 Description="Dataset ODM" CreationDateTime="2012-10-10T10:00:00" >
+  <ClinicalData Mirth:TranslateOID="true"				
+				StudyOID="PREHDICT" MetaDataVersionOID="v1.0.0">
+    <SubjectData Mirth:Create="false" Mirth:TranslateOID="true" SubjectKey="&lt;SUBJECT ID&gt;">   
+       <StudyEventData Mirth:Create="true" StudyEventOID="SE_HPV" StudyEventRepeatKey="&lt;VALUE&gt;" TransactionType="Update">
+        <FormData FormOID="F_PREHDICT_HPV_V12">
+          <ItemGroupData ItemGroupOID="IG_PREHD_UNGROUPED_7344" ItemGroupRepeatKey="1">
+            <ItemData ItemOID="I_PREHD_PREHDICT_IDWOMAN_876" Mirth:Comment="Identifier woman" Mirth:DataType="text" Mirth:ResponseType="text" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_DATEHPV" Mirth:Comment="Date sample for HPV taken" Mirth:DataType="text" Mirth:ResponseType="text" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_IDHPV" Mirth:Comment="HPV test identifier" Mirth:DataType="text" Mirth:ResponseType="text" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_CYTOPRES" Mirth:Comment="Cytology together with HPV test?" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_IDTEST" Mirth:Comment="Cytological test identifier" Mirth:DataType="text" Mirth:ResponseType="text" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_COLPOPRES" Mirth:Comment="Sample taken during colposcopy?" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_IDCOLPO" Mirth:Comment="Colposcopy identifier" Mirth:DataType="text" Mirth:ResponseType="text" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_METHODHPV1" Mirth:Comment="Method used for HPV test 1" Mirth:DataType="integer" Mirth:ResponseType="single-select" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_METHODHPV2" Mirth:Comment="Method used for HPV test 2" Mirth:DataType="integer" Mirth:ResponseType="single-select" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_METHODHPV3" Mirth:Comment="Method used for HPV test 3" Mirth:DataType="integer" Mirth:ResponseType="single-select" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_RESHPV1" Mirth:Comment="Presence hrHPV at test 1" Mirth:DataType="integer" Mirth:ResponseType="single-select" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_RESHPV2" Mirth:Comment="Presence hrHPV at test 2" Mirth:DataType="integer" Mirth:ResponseType="single-select" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_RESHPV3" Mirth:Comment="Presence hrHPV at test 3" Mirth:DataType="integer" Mirth:ResponseType="single-select" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_RATIO1" Mirth:Comment="Value HC2 Ratio for test 1" Mirth:DataType="float" Mirth:ResponseType="text" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_RECHPV" Mirth:Comment="Recommendation resulting from HPV test" Mirth:DataType="integer" Mirth:ResponseType="single-select" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_INTYP" Mirth:Comment="Typing available?" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_METHODTYP" Mirth:Comment="Method used for typing" Mirth:DataType="integer" Mirth:ResponseType="text" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_NTYPES" Mirth:Comment="How many types were detected?" Mirth:DataType="integer" Mirth:ResponseType="text" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_HPV16" Mirth:Comment="HPV16 present" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_HPV18" Mirth:Comment="HPV18 present" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_HPV31" Mirth:Comment="HPV31 present" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_HPV33" Mirth:Comment="HPV33 present" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_HPV35" Mirth:Comment="HPV35 present" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_HPV39" Mirth:Comment="HPV39 present" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_HPV45" Mirth:Comment="HPV45 present" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_HPV51" Mirth:Comment="HPV51 present" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_HPV52" Mirth:Comment="HPV52 present" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_HPV56" Mirth:Comment="HPV56 present" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_HPV58" Mirth:Comment="HPV58 present" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_HPV59" Mirth:Comment="HPV59 present" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_HPV66" Mirth:Comment="HPV66 present" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+            <ItemData ItemOID="I_PREHD_PREHDICT_HPV68" Mirth:Comment="HPV68 present" Mirth:DataType="integer" Mirth:ResponseType="radio" Value="&lt;VALUE&gt;"/>
+          </ItemGroupData>
+        </FormData>
+      </StudyEventData>      
+    </SubjectData>
+  </ClinicalData>
+</ODM>

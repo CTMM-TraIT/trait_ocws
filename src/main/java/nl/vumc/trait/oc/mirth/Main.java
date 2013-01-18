@@ -72,7 +72,7 @@ public abstract class Main {
 		xPath.setNamespaceContext(new NSContext()); // <- important too!
 		debug = false;
 		logger = Logger.getLogger("nl.vumc.trait.oc.mirth");
-		logger.setLevel(Level.WARN);
+		logger.setLevel(Level.DEBUG);                
 	}
 
 	/**

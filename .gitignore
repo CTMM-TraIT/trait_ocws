@@ -1,2 +1,6 @@
 !/target/trait_ocws-1.0-SNAPSHOT.jar
 !/target/traitocws-0.0.1-SNAPSHOT.jar
+/distribution/traitocws-0.0.2-SNAPSHOT.jar
+/target/classes/
+/target/surefire-reports/
+/target/generated-sources/

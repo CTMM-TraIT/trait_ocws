@@ -45,7 +45,7 @@ public class ClinicalODM extends AbstractODM {
         private static Logger logger = LogManager.getLogger(ClinicalODM.class);
 
 	/** clean on instantiation or not */
-	protected static final boolean DEFAULT_CLEANING = true;
+	protected static final boolean DEFAULT_CLEANING = false;
 
 	/**
 	 * Location of the ODM cleaning XSL template
