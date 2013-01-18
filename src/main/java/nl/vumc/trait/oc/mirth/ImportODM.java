@@ -158,7 +158,7 @@ public class ImportODM extends Main {
 			odmNode.appendChild(clinicalDatas.item(i));
 			logger.debug("============================ setOdm start =================");
 			resolver.setOdm(odmDoc); // important!
-			System.out.println("Current ODM:\n" + resolver.extraClean().toString());
+			logger.debug("Current ODM:\n" + resolver.extraClean().toString());
 			logger.debug("============================ setOdm end ===================");
 			logger.debug("connector.import..... start");
 			logger.debug("connector.import..... connector: " + resolver.getConnector());
