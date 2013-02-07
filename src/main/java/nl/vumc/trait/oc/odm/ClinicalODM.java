@@ -112,10 +112,9 @@ public class ClinicalODM extends AbstractODM {
 	 * @throws ODMException 
 	 */
 	private Document cleaningTransformation(Document odm) throws ODMException {
-		try {
-			InputStream xslt = getClass().getResourceAsStream(ODM_XSLT);
+		try {			
 			Document result = documentBuilder.newDocument();
-			Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslt));
+			Transformer transformer = TransformerCache.newTransformer(ODM_XSLT);
 			transformer.transform(new DOMSource(odm), new DOMResult(result));
 			return result;
 		} catch (Exception e) {

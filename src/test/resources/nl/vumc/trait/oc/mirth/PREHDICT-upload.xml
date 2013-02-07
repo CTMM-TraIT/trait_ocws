@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ODM xmlns:Mirth="http://www.vumc.nl/trait/odm/mirth/v0.1" xmlns:OpenClinica="http://www.openclinica.org/ns/odm_ext_v130/v3.1" xmlns:cdisc="http://www.cdisc.org/ns/odm/v1.3" Mirth:PreliminaryConsistencyCheck="false">
+    <ClinicalData Mirth:TranslateOID="false" StudyOID="S_PREHDICT">
+        <SubjectData Mirth:Create="true" Mirth:TranslateOID="true" OpenClinica:DateOfBirth="1957-12-01" OpenClinica:DateOfRegistration="2002-06-28" OpenClinica:Sex="f" OpenClinica:UniqueIdentifier="_UNIQUE_ID_" SubjectKey="_SUBJECT_KEY_">
+            <StudyEventData Mirth:Create="true" OpenClinica:StartDate="2012-12-01" StudyEventOID="SE_IDENTIFY" StudyEventRepeatKey="1">
+                <FormData FormOID="F_PREHDICT_IDE_V13">
+                    <ItemGroupData ItemGroupOID="IG_PREHD_UNGROUPED" ItemGroupRepeatKey="1" TransactionType="Insert">
+                        <ItemData ItemOID="I_PREHD_PREHDICT_IDWOMAN" Mirth:Comment="Identifier woman" Mirth:DataType="text" Mirth:ResponseType="text" Value="PO-44075"/>
+                        <ItemData ItemOID="I_PREHD_PREHDICT_STUDY" Mirth:Comment="Which study did woman participate?" Mirth:DataType="text" Mirth:ResponseType="single-select" Value="POBASCAM"/>
+                        <ItemData ItemOID="I_PREHD_PREHDICT_CENTRE" Mirth:Comment="Centre within study" Mirth:DataType="text" Mirth:ResponseType="single-select" Value="VU"/>
+                        <ItemData ItemOID="I_PREHD_PREHDICT_DABIRTH" Mirth:Comment="Date of Birth  YYYYMM (Year and Month only for privacy reasons)" Mirth:DataType="text" Mirth:ResponseType="text" Value="195712"/>
+                        <ItemData ItemOID="I_PREHD_PREHDICT_DARECR" Mirth:Comment="Date of recruitment" Mirth:DataType="text" Mirth:ResponseType="text" Value="20020628"/>
+                        <ItemData ItemOID="I_PREHD_PREHDICT_ARM" Mirth:Comment="Arm to which woman was randomised?" Mirth:DataType="text" Mirth:ResponseType="single-select" Value="1"/>
+                    </ItemGroupData>
+                </FormData>
+            </StudyEventData>
+        </SubjectData>
+    </ClinicalData>
+</ODM>
+
+
+

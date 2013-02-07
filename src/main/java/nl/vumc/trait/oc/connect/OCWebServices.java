@@ -560,7 +560,7 @@ public class OCWebServices extends OCConnector {
 					}
 					study.getStudySubjects().add(newSubject);
 					if (fetchOIDs) {
-						updateOID(newSubject);
+						getSubjectOID(newSubject);
 					}
 					if (s.getEvents() != null) {
 						if (s.getEvents().getEvent() != null) { // get all scheduled events
@@ -589,9 +589,9 @@ public class OCWebServices extends OCConnector {
 	 * @throws DatatypeConfigurationException
 	 * @throws OCConnectorException
 	 */
-	public void updateOID(StudySubject subject) throws OCConnectorException   {
+	public String getSubjectOID(StudySubject subject) throws OCConnectorException   {
 		IsStudySubjectResponse response = isStudySubject(subject);
-		subject.setStudySubjectOID(response.getStudySubjectOID());
+		return response.getStudySubjectOID();
 	}
 
 }

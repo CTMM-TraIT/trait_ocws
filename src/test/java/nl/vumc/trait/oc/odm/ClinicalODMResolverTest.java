@@ -45,10 +45,7 @@ public class ClinicalODMResolverTest {
 
     @Test
     public void testNoPrelimanaryConsistancyCheck() throws Exception {
-        
-        
-        
-        ConnectInfo connectInfo = new ConnectInfo("https://wp1vm3.ehv.campus.philips.com/OpenClinica-ws-dev", "mirthuser", ConnectInfo.toSHA1("mirthuser"));
+        ConnectInfo connectInfo = new ConnectInfo("https://wp1vm3.ehv.campus.philips.com/OpenClinica-ws-dev", "mirthconnect", ConnectInfo.toSHA1("mirthconnect"));
         OCWebServices connector = OCWebServices.getInstance(connectInfo, true, false);
         Assert.assertNotNull(connector);
 

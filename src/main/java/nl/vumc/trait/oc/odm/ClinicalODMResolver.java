@@ -28,7 +28,7 @@ import nl.vumc.trait.oc.types.StudySubject;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openclinica.ws.study.v1.ListAllResponse;
-import org.openclinica.ws.studysubject.v1.IsStudySubjectRequest;
+import org.openclinica.ws.studysubject.v1.CreateResponse;
 import org.openclinica.ws.studysubject.v1.IsStudySubjectResponse;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -219,7 +219,7 @@ public class ClinicalODMResolver extends ClinicalODM {
      * @param node the nodes that supposedly has the ATTR_MIRTH_CREATE attribute
      * @return the boolean value as bool
      */
-    private boolean createOrNot(Node node) {
+    private boolean hasToBeCreated(Node node) {
         return checkBooleanAttribute(node, ATTR_MIRTH_CREATE);
     }
 
@@ -340,12 +340,12 @@ public class ClinicalODMResolver extends ClinicalODM {
                 }
                 handleSubjectDataNode(subjectData, subject);
                 try {
-                    connector.updateOID(subject); // if this works it must be in the study (and in our model)
+                    connector.getSubjectOID(subject); // if this works it must be in the study (and in our model)
                 } catch (OCConnectorException e) {
-                    if (createOrNot(subjectData)) {
+                    if (hasToBeCreated(subjectData)) {
                         logger.info("Creating study subject...");
                         connector.createStudySubject(subject);
-                        connector.updateOID(subject);
+                        connector.getSubjectOID(subject);
                         study.getStudySubjects().add(subject); // update model
                     } else {
                         logger.info("Failt to updateOID of subject " + subject);
@@ -369,7 +369,7 @@ public class ClinicalODMResolver extends ClinicalODM {
                     }
                     if (!hasEvent) { // no scheduled event
 
-                        if (createOrNot(eventData)) { // schedule one
+                        if (hasToBeCreated(eventData)) { // schedule one
                             logger.debug("Scheduling event with OID " + eventOID);
                             ScheduledEvent scheduledEvent = new ScheduledEvent(study.getEventDefinition(eventOID));
                             // scheduling happens here...
@@ -440,7 +440,6 @@ public class ClinicalODMResolver extends ClinicalODM {
 
         NodeList clinicalDatas = xPath(XPATH_CLINICAL_DATA);
         logger.info("Processing clinicalDatas " + clinicalDatas.getLength());
-        logger.info("Processing clinicalDatas " + clinicalDatas.getLength());
         ListAllResponse allStudies = connector.listAllStudies(); // fetch available studies                
         for (int i = 0; i < clinicalDatas.getLength(); ++i) {
             Node clinicalData = clinicalDatas.item(i); // ---- ClinicalData i ----
@@ -458,9 +457,16 @@ public class ClinicalODMResolver extends ClinicalODM {
             logger.debug("Found " + subjectDatas.getLength() + " subjects");
             for (int j = 0; j < subjectDatas.getLength(); ++j) {
                 Node subjectData = subjectDatas.item(j); // ---- SubjectData j ----
-                StudySubject subject = createStudySubject(study, subjectData);
+                StudySubject subject = createStudySubject(study, subjectData);                
+
+                if (hasToBeCreated(subjectData)) {
+                    logger.info("Creating study subject...");
+                    connector.createStudySubject(subject);                    
+                    study.getStudySubjects().add(subject); // update model   
+                }
+                
                 IsStudySubjectResponse isStudySubjectResponse = connector.isStudySubject(subject);
-                String subjectOID = isStudySubjectResponse.getStudySubjectOID();
+                String subjectOID = isStudySubjectResponse.getStudySubjectOID();                
                 getAttribute(subjectData, "SubjectKey").setNodeValue(subjectOID);
                 NodeList eventDatas = xPath(subjectData, XPATH_STUDYEVENTDATA);
                 for (int k = 0; k < eventDatas.getLength(); ++k) {
@@ -476,7 +482,7 @@ public class ClinicalODMResolver extends ClinicalODM {
                     }
                     if (!hasEvent) { // no scheduled event
 
-                        if (createOrNot(eventData)) { // schedule one
+                        if (hasToBeCreated(eventData)) { // schedule one
                             logger.debug("Scheduling event with OID " + eventOID);
                             ScheduledEvent scheduledEvent = new ScheduledEvent(study.getEventDefinition(eventOID));
                             // scheduling happens here...

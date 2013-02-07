@@ -75,11 +75,10 @@ public class MetadataODM extends AbstractODM {
 	 * @return the resulting template DOM Document
 	 * @throws ODMException 
 	 */
-	public ClinicalODM getClinicalTemplate() throws ODMException {
-		InputStream xslt = getClass().getResourceAsStream(ODM_XSLT);
+	public ClinicalODM getClinicalTemplate() throws ODMException {		
 		Document result = documentBuilder.newDocument();
 		try {
-			Transformer transformer = transformerFactory.newTransformer(new StreamSource(xslt));
+			Transformer transformer = TransformerCache.newTransformer(ODM_XSLT);
 			transformer.transform(new DOMSource(this.odm), new DOMResult(result));
 			return new ClinicalODM(result, false);
 		} catch (Exception e) {
