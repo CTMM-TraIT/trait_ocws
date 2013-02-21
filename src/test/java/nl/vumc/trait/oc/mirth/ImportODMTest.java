@@ -53,7 +53,7 @@ public class ImportODMTest {
         for (int i = 0; i < 1; i++) {
             String baseReplacement = "Test_" + RandomStringUtils.randomAlphanumeric(25);
             baseReplacement = baseReplacement.toUpperCase();
-            String parameterReplacedString = StringUtils.replace(odmDocument, "_UNIQUE_ID_", baseReplacement);
+            String parameterReplacedString = StringUtils.replace(odmDocument, "_UNIQUE_ID_", "FIXED_PREFIX_" +  baseReplacement);
             System.out.println("Uploading i "  + i + " subject : " + baseReplacement);
             parameterReplacedString = StringUtils.replace(parameterReplacedString, "_SUBJECT_KEY_", baseReplacement);
             instance.process(fileName, parameterReplacedString);

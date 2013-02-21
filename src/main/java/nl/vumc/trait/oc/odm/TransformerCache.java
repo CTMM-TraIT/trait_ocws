@@ -52,6 +52,7 @@ public class TransformerCache {
             InputStream xslInput = TransformerCache.class.getResourceAsStream(xsltFileName);
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
+            transformerFactory.setURIResolver( new ClasspathResourceURIResolver());
             templateCompiler = transformerFactory.newTemplates(new StreamSource(xslInput));
             
             cache.put(xsltFileName, templateCompiler);
