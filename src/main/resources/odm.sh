@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#	Copyright 2012 VU Medical Center Amsterdam
+#	Copyright 2012-2013 VU Medical Center Amsterdam
 #
 #	Licensed under the Apache License, Version 2.0 (the "License");
 #	you may not use this file except in compliance with the License.
@@ -19,8 +19,9 @@
 # Wrapper for ODM export and import
 # Requires java 1.6 build 30
 
-# 2012, VU Medical Center Amsterdam
+# 2012-2013, VU Medical Center Amsterdam
 # Author: Arjan van der Velde 
+# Author: Jacob Rousseau
 
 JARFILE="project.build.jarName:log4j.jar:commons-cli.jar"
 

@@ -75,6 +75,7 @@
                 </executions>
                 <configuration>
                     <file>target/classes/odm.sh</file>
+                    <file>target/classes/odm.bat</file>
                     <replacements>
                         <replacement>
                             <token>project.build.jarName</token>
