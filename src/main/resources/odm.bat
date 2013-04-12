@@ -20,6 +20,11 @@ REM 2012-2013, VU Medical Center Amsterdam
 REM Author: Arjan van der Velde 
 REM Author: Jacob Rousseau
 
+set "OC_URL="
+set "OC_USER="
+set "OC_PASSWORD="
+set "OC_STUDY="
+
 IF "%2" == "-b" (
     set OC_URL=-b %~3
 )
@@ -29,9 +34,14 @@ IF "%4" == "-u" (
 IF "%6" == "-p" (
     set OC_PASSWORD=-p %~7
 )
+
+IF "%8" == "-s" (
+    set OC_STUDY=-s %~9
+)
 echo OC_URL is: %OC_URL%
 echo OC_USER is: %OC_USER%
 echo OC_PASSWORD is: %OC_PASSWORD%
+echo OC_STUDY is: %OC_STUDY%
 REM Windows requires ';' as JAR delimeter in multiple jars in the class-path 
 REM while Unix needs a ':' 
 set JARFILE=project.build.jarName;log4j.jar;commons-cli.jar
@@ -41,7 +51,7 @@ REM determine action
 IF "X%1%" == "X--extract" (
 	REM extract
 	shift
-	java -cp %JARFILE% nl.vumc.trait.oc.main.ExtractODM %OC_URL% %OC_USER% %OC_PASSWORD% 
+	java -cp %JARFILE% nl.vumc.trait.oc.main.ExtractODM %OC_URL% %OC_USER% %OC_PASSWORD%  %OC_STUDY%
  ) ELSE ( 
  IF "X%1%" == "X--import" (
 	REM import
@@ -51,7 +61,7 @@ IF "X%1%" == "X--extract" (
  IF "X%1%" == "X--subjects" (
 	REM subjects
 	shift
-	java -cp %JARFILE% nl.vumc.trait.oc.main.ListSubjects %OC_URL% %OC_USER% %OC_PASSWORD% 
+	java -cp %JARFILE% nl.vumc.trait.oc.main.ListSubjects %OC_URL% %OC_USER% %OC_PASSWORD% %OC_STUDY%
  ) ELSE ( 
  IF  "X%1%" == "X--clean" (
 	REM clean
@@ -65,3 +75,9 @@ IF "X%1%" == "X--extract" (
 ) ELSE (
 	echo "Usage: `basename $0` < --extract | --import | --subjects | --clean | --studies > [ -h | --help ] <command specific options>"
 )))))
+
+set "OC_URL="
+set "OC_USER="
+set "OC_PASSWORD="
+set "OC_STUDY="
+
