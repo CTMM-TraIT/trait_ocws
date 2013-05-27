@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jaxws:bindings
+    xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+    xmlns:jaxb="http://java.sun.com/xml/ns/jaxb"
+    xmlns:wsdl="http://schemas.xmlsoap.org/wsdl/"    
+    xmlns:jaxws="http://java.sun.com/xml/ns/jaxws"
+    xmlns:javaee="http://java.sun.com/xml/ns/javaee">
+    <jaxws:bindings        
+        node="wsdl:definitions/wsdl:portType[@name='ws']/wsdl:operation[@name='import']"
+        jaxws:xmlns="http://java.sun.com/xml/ns/jaxws">        
+        <jaxws:method name="dataImport">
+            <jaxws:javadoc>Import odm data. Is generated with a custom
+            jaxws binding found in the file dataWsdl-binding.xml</jaxws:javadoc>
+        </jaxws:method>
+    </jaxws:bindings>    
+</jaxws:bindings>

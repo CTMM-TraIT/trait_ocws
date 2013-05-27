@@ -14,19 +14,19 @@ import javax.xml.transform.TransformerFactory;
 import javax.xml.transform.stream.StreamSource;
 
 /**
- * Inspired by the code found at: 
+ * Inspired by the code found at:
  * http://docstore.mik.ua/orelly/xml/jxslt/ch05_04.htm
- * 
+ *
  */
 public class TransformerCache {
 
-    private static Map<String, Templates> cache = new HashMap<String, Templates>();
+    private static Map<String, Transformer> cache = new HashMap<String, Transformer>();
 
     /**
      * Flush all cached stylesheets from memory, emptying the cache.
      */
-    public static synchronized void flushAll( ) {
-        cache.clear( );
+    public static synchronized void flushAll() {
+        cache.clear();
     }
 
     /**
@@ -45,21 +45,21 @@ public class TransformerCache {
      * @return a transformation context for the given stylesheet.
      */
     public static synchronized Transformer newTransformer(String xsltFileName)
-            throws TransformerConfigurationException {        
-        Templates templateCompiler = cache.get(xsltFileName);
+            throws TransformerConfigurationException {
+        Transformer transformer = cache.get(xsltFileName);
         // create and put a new transformer in the cache
-        if (templateCompiler == null) {
+        if (transformer == null) {
             InputStream xslInput = TransformerCache.class.getResourceAsStream(xsltFileName);
 
             TransformerFactory transformerFactory = TransformerFactory.newInstance();
-            transformerFactory.setURIResolver( new ClasspathResourceURIResolver());
-            templateCompiler = transformerFactory.newTemplates(new StreamSource(xslInput));
-            
-            cache.put(xsltFileName, templateCompiler);
+            transformerFactory.setURIResolver(new ClasspathResourceURIResolver());
+            Templates templateCompiler = transformerFactory.newTemplates(new StreamSource(xslInput));
+            transformer = templateCompiler.newTransformer();
+            cache.put(xsltFileName, transformer);
         }
-        return templateCompiler.newTransformer();
+        return transformer;
     }
-    
-    private TransformerCache() {        
+
+    private TransformerCache() {
     }
 }

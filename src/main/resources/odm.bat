@@ -17,7 +17,7 @@ REM Wrapper for ODM export and import
 REM Requires java 1.6 build 30
 
 REM 2012-2013, VU Medical Center Amsterdam
-REM Author: Arjan van der Velde 
+REM Author: Arjan van der Velde
 REM Author: Jacob Rousseau
 
 set "OC_URL="
@@ -38,36 +38,36 @@ IF "%6" == "-p" (
 IF "%8" == "-s" (
     set OC_STUDY=-s %~9
 )
-echo OC_URL is: %OC_URL%
-echo OC_USER is: %OC_USER%
-echo OC_PASSWORD is: %OC_PASSWORD%
-echo OC_STUDY is: %OC_STUDY%
-REM Windows requires ';' as JAR delimeter in multiple jars in the class-path 
-REM while Unix needs a ':' 
-set JARFILE=project.build.jarName;log4j.jar;commons-cli.jar
-echo Classpath is: %JARFILE%
+REM echo OC_URL is: %OC_URL%
+REM  OC_USER is: %OC_USER%
+REM  OC_PASSWORD is: %OC_PASSWORD%
+REM  OC_STUDY is: %OC_STUDY%
+REM Windows requires ';' as JAR delimeter in multiple jars in the class-path
+REM while Unix needs a ':'
+set JARFILE=project.build.jarName;log4j.jar;commons-cli.jar;
+REM echo Classpath is: %JARFILE%
 
 REM determine action
 IF "X%1%" == "X--extract" (
 	REM extract
 	shift
 	java -cp %JARFILE% nl.vumc.trait.oc.main.ExtractODM %OC_URL% %OC_USER% %OC_PASSWORD%  %OC_STUDY%
- ) ELSE ( 
+ ) ELSE (
  IF "X%1%" == "X--import" (
 	REM import
 	shift
-	java -cp %JARFILE% nl.vumc.trait.oc.main.ImportODM %OC_URL% %OC_USER% %OC_PASSWORD% 
- ) ELSE ( 
+	java -cp %JARFILE% nl.vumc.trait.oc.main.ImportODM %OC_URL% %OC_USER% %OC_PASSWORD%
+ ) ELSE (
  IF "X%1%" == "X--subjects" (
 	REM subjects
 	shift
 	java -cp %JARFILE% nl.vumc.trait.oc.main.ListSubjects %OC_URL% %OC_USER% %OC_PASSWORD% %OC_STUDY%
- ) ELSE ( 
+ ) ELSE (
  IF  "X%1%" == "X--clean" (
 	REM clean
 	shift
-	java -cp %JARFILE% nl.vumc.trait.oc.main.CleanODM %OC_URL% %OC_USER% %OC_PASSWORD% 
- ) ELSE ( 
+	java -cp %JARFILE% nl.vumc.trait.oc.main.CleanODM %OC_URL% %OC_USER% %OC_PASSWORD%
+ ) ELSE (
  IF "X%1%" == "X--studies" (
 	REM studies
 	shift
