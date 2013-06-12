@@ -1,19 +1,19 @@
 /*
-	
+
  Copyright 2012 VU Medical Center Amsterdam
-	
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
-	
+
  http://www.apache.org/licenses/LICENSE-2.0
-	
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
-	
+
  */
 package nl.vumc.trait.oc.types;
 
@@ -71,6 +71,10 @@ public class StudySubject {
      * The Study this is a subject for
      */
     private Study study;
+    /**
+     * The site of the study with which the subject is associated
+     */
+    private String siteOID;
 
     /**
      * Create a study subject for a given Study
@@ -81,8 +85,7 @@ public class StudySubject {
     public StudySubject(Study study) {
         try {
             dataTypeFactory = DatatypeFactory.newInstance();
-        } 
-        catch (DatatypeConfigurationException dce) {
+        } catch (DatatypeConfigurationException dce) {
             throw new IllegalStateException("Unable to create dataTypeFactory. Cause:\n", dce);
         }
         dateOfRegistration = dataTypeFactory.newXMLGregorianCalendar(new GregorianCalendar());
@@ -105,6 +108,7 @@ public class StudySubject {
 
     /**
      * Update this study subject from a OC StudySubjectWithEventsType object
+     *
      * @param subject the OC StudySubjectWithEventsType to use
      */
     public final void updateStudySubject(StudySubjectWithEventsType subject) {
@@ -117,6 +121,7 @@ public class StudySubject {
 
     /**
      * Get PersonID
+     *
      * @return personID
      */
     public String getPersonID() {
@@ -282,6 +287,14 @@ public class StudySubject {
         this.study = study;
     }
 
+    public String getSiteOID() {
+        return siteOID;
+    }
+
+    public void setSiteOID(String siteOID) {
+        this.siteOID = siteOID;
+    }
+
     /**
      * Check for presence of OID
      *
@@ -313,7 +326,7 @@ public class StudySubject {
         }
         StudySubject otherSubject = (StudySubject) that;
         return EqualsUtil.areEqual(this.personID, otherSubject.personID)
-            && EqualsUtil.areEqual(this.studySubjectLabel, otherSubject.studySubjectLabel)
-            && EqualsUtil.areEqual(this.study, otherSubject.study);
+                && EqualsUtil.areEqual(this.studySubjectLabel, otherSubject.studySubjectLabel)
+                && EqualsUtil.areEqual(this.study, otherSubject.study);
     }
 }

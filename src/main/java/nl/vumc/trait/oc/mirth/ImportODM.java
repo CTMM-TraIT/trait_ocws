@@ -29,6 +29,8 @@ import nl.vumc.trait.oc.connect.OCConnectorException;
 import nl.vumc.trait.oc.connect.OCWebServices;
 import nl.vumc.trait.oc.odm.ClinicalODMResolver;
 import nl.vumc.trait.oc.odm.ODMException;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.Node;
@@ -43,6 +45,7 @@ import org.xml.sax.SAXException;
  */
 public class ImportODM extends Main {
 
+    private static final Logger logger = LogManager.getLogger(ImportODM.class);
     private final static int DEFAULT_EXPIRE = 60;
 
     private class ResolverCache {
@@ -140,7 +143,7 @@ public class ImportODM extends Main {
                 OCWebServices connector = OCWebServices.getInstance(connectInfo, debug, false);
                 resolvers.put(batch, new ResolverCache(new ClinicalODMResolver(connector), expire));
             } catch (Exception e) {
-                throw new OCConnectorException("Cannot setup ImportODM", e);
+                throw new OCConnectorException("Cannot setup ImportODM;" + e.getMessage(), e);
             }
         } else {
             resolvers.get(batch).updateTimeStamp();

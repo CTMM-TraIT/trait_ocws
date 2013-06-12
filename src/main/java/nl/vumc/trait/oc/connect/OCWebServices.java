@@ -30,6 +30,7 @@ import nl.vumc.trait.oc.types.Event;
 import nl.vumc.trait.oc.types.ScheduledEvent;
 import nl.vumc.trait.oc.types.Study;
 import nl.vumc.trait.oc.types.StudySubject;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openclinica.ws.beans.EventType;
@@ -66,7 +67,7 @@ import org.xml.sax.SAXException;
  */
 public class OCWebServices extends OCConnector {
 
-    private Logger logger = LogManager.getLogger(OCWebServices.class);
+    private static final Logger logger = LogManager.getLogger(OCWebServices.class);
     // ================================================================================================================
     // we are a connector. implement the obliged stuff here...
     /**
@@ -184,7 +185,7 @@ public class OCWebServices extends OCConnector {
         try {
             response = studySubjectBinding.listAllByStudy(request);
         } catch (Exception e) {
-            throw new OCConnectorException("Exception while calling OpenClinica web service\n", e);
+            throw new OCConnectorException("Exception while calling OpenClinica web service." + e.getMessage(), e);
         }
         checkResponseExceptions(response.getResult(), response.getError());
         return response;
@@ -211,7 +212,7 @@ public class OCWebServices extends OCConnector {
         }
         if (study.hasSiteName()) {
             SiteRefType siteref = new SiteRefType();
-            siteref.setIdentifier(study.getStudyOID());
+            siteref.setIdentifier(study.getSiteName());
             studyRef.setSiteRef(siteref);
         }
         ocSubject.setLabel(studySubject.getStudySubjectLabel());
@@ -296,9 +297,9 @@ public class OCWebServices extends OCConnector {
         // reference to study
         StudyRefType studyRef = new StudyRefType();
         studyRef.setIdentifier(study.getStudyName());
-        if (study.hasSiteName()) {
+        if (!StringUtils.isBlank(studySubject.getSiteOID())) {
             SiteRefType siteref = new SiteRefType();
-            siteref.setIdentifier(study.getSiteName());
+            siteref.setIdentifier(studySubject.getSiteOID());
             studyRef.setSiteRef(siteref);
         }
         // combine to create studysubject
@@ -526,9 +527,8 @@ public class OCWebServices extends OCConnector {
         // not found
         if (!found) {
             throw new OCConnectorException("Study '" + studyIdentifier + "' does not exist.");
-        } else {
-            return result;
         }
+        return result;
     }
 
     /**

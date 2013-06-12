@@ -1,34 +1,36 @@
 /*
-	
+
  Copyright 2012 VU Medical Center Amsterdam
-	
+
  Licensed under the Apache License, Version 2.0 (the "License");
  you may not use this file except in compliance with the License.
  You may obtain a copy of the License at
-	
+
  http://www.apache.org/licenses/LICENSE-2.0
-	
+
  Unless required by applicable law or agreed to in writing, software
  distributed under the License is distributed on an "AS IS" BASIS,
  WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  See the License for the specific language governing permissions and
  limitations under the License.
-	
+
  */
 package nl.vumc.trait.oc.odm;
 
 import java.util.Collection;
 import java.util.HashMap;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.transform.TransformerException;
 import nl.vumc.trait.oc.connect.OCConnectorException;
 import nl.vumc.trait.oc.connect.OCWebServices;
+import nl.vumc.trait.oc.soap.Util;
 import nl.vumc.trait.oc.types.ScheduledEvent;
 import nl.vumc.trait.oc.types.Study;
 import nl.vumc.trait.oc.types.StudySubject;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openclinica.ws.study.v1.ListAllResponse;
-import org.openclinica.ws.studysubject.v1.CreateResponse;
 import org.openclinica.ws.studysubject.v1.IsStudySubjectResponse;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
@@ -50,6 +52,13 @@ public class ClinicalODMResolver extends ClinicalODM {
      * certain element
      */
     private static final String ATTR_MIRTH_TRANSLATEOID = "Mirth:TranslateOID";
+    // TODO change the code to use the ODM1.3 siteRef@LocationOID construction;
+    // JR 12-06-2013
+    /**
+     * The site of a subject. Should be placed on the SubjectData element in the
+     * ODM.
+     */
+    private static final String ATTR_MIRTH_SITE_IDENDIFIER = "Mirth:siteIdentifier";
     /**
      * Attribute: Mirth:Create, indicates whether or not to create a certain
      * element if non-existent
@@ -250,16 +259,20 @@ public class ClinicalODMResolver extends ClinicalODM {
         String subjectHandle = "";
         for (int i = 0; i < attributes.getLength(); ++i) {
             Node node = attributes.item(i);
-            if (node.getNodeName().equals(ATTR_OC_DATEOFBIRTH)) {
-                studySubject.setDateOfBirth(node.getNodeValue());
-            } else if (node.getNodeName().equals(ATTR_OC_DATEOFREGISTRATION)) {
-                studySubject.setDateOfRegistration(node.getNodeValue());
-            } else if (node.getNodeName().equals(ATTR_OC_SEX)) {
-                studySubject.setSex(node.getNodeValue());
-            } else if (node.getNodeName().equals(ATTR_OC_SUBJECTKEY)) {
-                subjectHandle = node.getNodeValue();
-            } else if (node.getNodeName().equals(ATTR_OC_PERSONID)) {
-                studySubject.setPersonID(node.getNodeValue());
+            String nodeName = node.getNodeName();
+            String nodeValue = node.getNodeValue();
+            if (ATTR_OC_DATEOFBIRTH.equals(nodeName)) {
+                studySubject.setDateOfBirth(nodeValue);
+            } else if (ATTR_OC_DATEOFREGISTRATION.equals(nodeName)) {
+                studySubject.setDateOfRegistration(nodeValue);
+            } else if (ATTR_OC_SEX.equals(nodeName)) {
+                studySubject.setSex(nodeValue);
+            } else if (ATTR_OC_SUBJECTKEY.equals(nodeName)) {
+                subjectHandle = nodeValue;
+            } else if (ATTR_OC_PERSONID.equals(nodeName)) {
+                studySubject.setPersonID(nodeValue);
+            } else if (ATTR_MIRTH_SITE_IDENDIFIER.equals(nodeName)) {
+                studySubject.setSiteOID(nodeValue);
             }
             if (translateOrNot(subjectDataNode)) {
                 studySubject.setStudySubjectLabel(subjectHandle);
@@ -281,7 +294,7 @@ public class ClinicalODMResolver extends ClinicalODM {
      */
     private Collection<Study> resolvStudy() throws ODMException, OCConnectorException {
         logger.debug("Resolving study");
-        ListAllResponse allStudies = connector.listAllStudies(); // fetch available studies                
+        ListAllResponse allStudies = connector.listAllStudies(); // fetch available studies
         logger.debug("Resolved study; found " + allStudies.getStudies().getStudy().size());
         return resolveMe(allStudies);
     }
@@ -440,7 +453,7 @@ public class ClinicalODMResolver extends ClinicalODM {
 
         NodeList clinicalDatas = xPath(XPATH_CLINICAL_DATA);
         logger.info("Processing clinicalDatas " + clinicalDatas.getLength());
-        ListAllResponse allStudies = connector.listAllStudies(); // fetch available studies                
+        ListAllResponse allStudies = connector.listAllStudies(); // fetch available studies
         for (int i = 0; i < clinicalDatas.getLength(); ++i) {
             Node clinicalData = clinicalDatas.item(i); // ---- ClinicalData i ----
             Attr studyOID = getAttribute(clinicalData, ATTR_STUDYOID);
@@ -457,16 +470,16 @@ public class ClinicalODMResolver extends ClinicalODM {
             logger.debug("Found " + subjectDatas.getLength() + " subjects");
             for (int j = 0; j < subjectDatas.getLength(); ++j) {
                 Node subjectData = subjectDatas.item(j); // ---- SubjectData j ----
-                StudySubject subject = createStudySubject(study, subjectData);                
+                StudySubject subject = createStudySubject(study, subjectData);
 
                 if (hasToBeCreated(subjectData)) {
                     logger.info("Creating study subject...");
-                    connector.createStudySubject(subject);                    
-                    study.getStudySubjects().add(subject); // update model   
+                    connector.createStudySubject(subject);
+                    study.getStudySubjects().add(subject); // update model
                 }
-                
+
                 IsStudySubjectResponse isStudySubjectResponse = connector.isStudySubject(subject);
-                String subjectOID = isStudySubjectResponse.getStudySubjectOID();                
+                String subjectOID = isStudySubjectResponse.getStudySubjectOID();
                 getAttribute(subjectData, "SubjectKey").setNodeValue(subjectOID);
                 NodeList eventDatas = xPath(subjectData, XPATH_STUDYEVENTDATA);
                 for (int k = 0; k < eventDatas.getLength(); ++k) {

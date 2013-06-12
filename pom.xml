@@ -4,7 +4,7 @@
 
     <groupId>nl.vumc</groupId>
     <artifactId>traitocws</artifactId>
-    <version>0.0.4-SNAPSHOT</version>
+    <version>0.0.5-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>TraIT-OCWS</name>
     <url>http://maven.apache.org</url>
