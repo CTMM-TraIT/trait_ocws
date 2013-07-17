@@ -11,6 +11,7 @@ import nl.vumc.trait.oc.connect.ConnectInfo;
 import org.apache.commons.io.IOUtils;
 import org.apache.commons.lang.RandomStringUtils;
 import org.apache.commons.lang.StringUtils;
+import org.junit.Ignore;
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.ExpectedException;
@@ -53,6 +54,7 @@ public class ImportODMTest {
      * Test of process method, of class ImportODM.
      */
     @Test
+    @Ignore
     public void testLoad() throws Exception {
         String fileName = "PREHDICT-upload.xml";
         initialize(fileName);
@@ -71,6 +73,7 @@ public class ImportODMTest {
     }
 
     @Test
+    @Ignore
     public void testUnbalancedCall() throws Exception {
         String fileName = "PREHDICT-upload.xml";
         initialize(fileName);

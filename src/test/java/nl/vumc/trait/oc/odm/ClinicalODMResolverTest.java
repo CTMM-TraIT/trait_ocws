@@ -19,6 +19,7 @@ import junit.framework.Assert;
 import nl.vumc.trait.oc.connect.ConnectInfo;
 import nl.vumc.trait.oc.connect.OCConnectorException;
 import nl.vumc.trait.oc.connect.OCWebServices;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.w3c.dom.Document;
 import org.xml.sax.InputSource;
@@ -30,7 +31,7 @@ import org.xml.sax.InputSource;
 public class ClinicalODMResolverTest {
 
     private Document odmDocument;
-    
+
     public ClinicalODMResolverTest() throws Exception {
 
         DocumentBuilderFactory documentBuilderFactory = DocumentBuilderFactory.newInstance();
@@ -38,19 +39,20 @@ public class ClinicalODMResolverTest {
         documentBuilderFactory.setNamespaceAware(true); // <- important!
         DocumentBuilder documentBuilder = documentBuilderFactory.newDocumentBuilder();
         InputStream is = this.getClass().getResourceAsStream("ODM_test.xml");
-        
+
         InputSource reader = new InputSource(is);
         odmDocument = documentBuilder.parse(reader);
     }
 
     @Test
+    @Ignore
     public void testNoPrelimanaryConsistancyCheck() throws Exception {
         ConnectInfo connectInfo = new ConnectInfo("https://wp1vm3.ehv.campus.philips.com/OpenClinica-ws-dev", "mirthconnect", ConnectInfo.toSHA1("mirthconnect"));
         OCWebServices connector = OCWebServices.getInstance(connectInfo, true, false);
         Assert.assertNotNull(connector);
 
-        ClinicalODMResolver resolverUnderTest = 
-                new ClinicalODMResolver(odmDocument, connector);        
-        Assert.assertEquals(resolverUnderTest.resolveOdmDocument(), 2);                
+        ClinicalODMResolver resolverUnderTest =
+                new ClinicalODMResolver(odmDocument, connector);
+        Assert.assertEquals(resolverUnderTest.resolveOdmDocument(), 2);
     }
 }
