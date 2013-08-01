@@ -76,7 +76,7 @@ public class ImportODM extends Main {
      *
      * @throws ParserConfigurationException
      */
-    public ImportODM() throws ParserConfigurationException {
+    public ImportODM() throws Exception {
         super();
         resolvers = new HashMap<String, ResolverCache>();
         logger.debug("ImportODM Instantiated...");

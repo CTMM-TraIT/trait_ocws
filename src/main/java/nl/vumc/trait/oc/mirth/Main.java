@@ -17,6 +17,8 @@
  */
 package nl.vumc.trait.oc.mirth;
 
+import java.io.IOException;
+import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.parsers.ParserConfigurationException;
@@ -25,6 +27,8 @@ import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
 
 import nl.vumc.trait.oc.odm.NSContext;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * Skeleton for any program contained within this package. It provides and
@@ -35,6 +39,7 @@ import nl.vumc.trait.oc.odm.NSContext;
  */
 public abstract class Main {
 
+    private static final Logger logger = LogManager.getLogger(Main.class);
     /**
      * Document Builder Factory, set to be namespace aware in default
      * constructor
@@ -61,12 +66,20 @@ public abstract class Main {
      */
     protected XPath xPath;
 
+    protected void splashScreen() throws IOException {
+        Properties props = new Properties();
+        props.load(Main.class.getResourceAsStream("/application.properties"));
+        System.out.println("Starting OCWS version " + props.getProperty("application.version"));
+        logger.debug("Starting OCWS version " + props.getProperty("application.version"));
+    }
+
     /**
      * Initialize a Main() object
      *
      * @throws ParserConfigurationException
      */
-    public Main() throws ParserConfigurationException {
+    public Main() throws Exception {
+        splashScreen();
         documentBuilderFactory = DocumentBuilderFactory.newInstance();
         documentBuilderFactory.setValidating(false);
         documentBuilderFactory.setNamespaceAware(true); // <- important!

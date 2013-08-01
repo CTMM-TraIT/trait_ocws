@@ -156,8 +156,12 @@ public class OCWebServices extends OCConnector {
      * @throws OCConnectorException
      */
     public ListAllResponse listAllStudies() throws OCConnectorException {
-        // TODO: catch errors (see listAllByStudy)
-        ListAllResponse response = studyBinding.listAll(null);
+        ListAllResponse response;
+        try {
+            response = studyBinding.listAll(null);
+        } catch (Exception e) {
+            throw new OCConnectorException("Exception while calling OpenClinica web service." + e.getMessage(), e);
+        }
         checkResponseExceptions(response.getResult(), response.getError());
         return response;
     }
@@ -331,11 +335,14 @@ public class OCWebServices extends OCConnector {
      * @throws OCConnectorException
      */
     public ImportResponse importODM(String odm) throws OCConnectorException {
-        // TODO: catch errors (see listAllByStudy) (also, this method looks a
-        // bit short...)
         // TODO: See OC manual on limitations which are the main motivation
         // for this code in the first place
-        ImportResponse response = dataBinding.dataImport(odm);
+        ImportResponse response;
+        try {
+            response = dataBinding.dataImport(odm);
+        } catch (Exception e) {
+            throw new OCConnectorException("Exception while calling OpenClinica web service." + e.getMessage(), e);
+        }
         checkResponseExceptions(response.getResult(), response.getError());
         return response;
     }
@@ -526,7 +533,7 @@ public class OCWebServices extends OCConnector {
         }
         // not found
         if (!found) {
-            throw new OCConnectorException("Study '" + studyIdentifier + "' does not exist.");
+            throw new OCConnectorException("Study '" + studyIdentifier + "' does not exist or user not associated with study");
         }
         return result;
     }

@@ -17,6 +17,7 @@
  */
 package nl.vumc.trait.oc.main;
 
+import java.io.IOException;
 import java.util.Properties;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -36,6 +37,8 @@ import org.apache.log4j.BasicConfigurator;
 import nl.vumc.trait.oc.connect.ConnectInfo;
 import nl.vumc.trait.oc.connect.OCConnectorException;
 import nl.vumc.trait.oc.odm.NSContext;
+import org.apache.log4j.LogManager;
+import org.apache.log4j.Logger;
 
 /**
  * Skeleton for any program contained within this package. It provides and
@@ -46,6 +49,7 @@ import nl.vumc.trait.oc.odm.NSContext;
  */
 public abstract class Main {
 
+    private static final Logger logger = LogManager.getLogger(Main.class);
     /**
      * Document Builder Factory, used as a namespace aware document builder
      * factory.
@@ -112,6 +116,13 @@ public abstract class Main {
         parser = new PosixParser();
     }
 
+    protected void splashScreen() throws IOException {
+        Properties props = new Properties();
+        props.load(Main.class.getResourceAsStream("/application.properties"));
+        System.out.println("Starting OCWS version " + props.getProperty("application.version"));
+        logger.debug("Starting OCWS version " + props.getProperty("application.version"));
+    }
+
     /**
      * Initialize a Main() object setting processing command line arguments.
      *
@@ -125,9 +136,7 @@ public abstract class Main {
         this.command = command;
         setupOptions();
         try {
-            Properties props = new Properties();
-            props.load(Main.class.getResourceAsStream("/application.properties"));
-            System.out.println("Starting OCWS version " + props.getProperty("application.version"));
+            splashScreen();
             processArgs(args);
             runCmd();
         } catch (ParseException e) {
