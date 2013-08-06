@@ -205,7 +205,6 @@ public class OCWebServices extends OCConnector {
      * @throws OCConnectorException
      */
     public IsStudySubjectResponse isStudySubject(StudySubject studySubject, boolean submitDate) throws OCConnectorException {
-        // TODO: catch errors (see listAllByStudy)
         Study study = studySubject.getStudy();
         IsStudySubjectRequest request = new IsStudySubjectRequest();
         StudyRefType studyRef = new StudyRefType();
@@ -222,7 +221,12 @@ public class OCWebServices extends OCConnector {
         ocSubject.setLabel(studySubject.getStudySubjectLabel());
         ocSubject.setStudyRef(studyRef);
         request.setStudySubject(ocSubject);
-        IsStudySubjectResponse response = studySubjectBinding.isStudySubject(request);
+        IsStudySubjectResponse response;
+        try {
+            response = studySubjectBinding.isStudySubject(request);
+        } catch (Exception e) {
+            throw new OCConnectorException("Exception while calling OpenClinica web service. " + e.getMessage(), e);
+        }
         checkResponseExceptions(response.getResult(), response.getError());
         return response;
     }
@@ -269,7 +273,12 @@ public class OCWebServices extends OCConnector {
             siteref.setIdentifier(study.getSiteName());
             studyRef.setSiteRef(siteref);
         }
-        ScheduleResponse scheduleResponse = eventBinding.schedule(scheduleRequest);
+        ScheduleResponse scheduleResponse;
+        try {
+            scheduleResponse = eventBinding.schedule(scheduleRequest);
+        } catch (Exception e) {
+            throw new OCConnectorException("Exception while calling OpenClinica web service. " + e.getMessage(), e);
+        }
         checkResponseExceptions(scheduleResponse.getResult(), scheduleResponse.getError());
         logger.info("Scheduled event " + scheduleResponse.getEventDefinitionOID()
                 + " for subject " + scheduleResponse.getStudySubjectOID()
@@ -286,8 +295,6 @@ public class OCWebServices extends OCConnector {
      * @throws OCConnectorException
      */
     public CreateResponse createStudySubject(StudySubject studySubject) throws OCConnectorException {
-        // TODO: catch errors (see listAllByStudy)
-
         Study study = studySubject.getStudy();
 
         // subject
@@ -314,9 +321,14 @@ public class OCWebServices extends OCConnector {
         newStudySubject.setSubject(subject);
 
         // create a create-request
-        CreateRequest create = new CreateRequest();
-        create.getStudySubject().add(newStudySubject);
-        CreateResponse createResponse = studySubjectBinding.create(create);
+        CreateRequest request = new CreateRequest();
+        request.getStudySubject().add(newStudySubject);
+        CreateResponse createResponse;
+        try {
+            createResponse = studySubjectBinding.create(request);
+        } catch (Exception e) {
+            throw new OCConnectorException("Exception while calling OpenClinica web service. " + e.getMessage(), e);
+        }
         checkResponseExceptions(createResponse.getResult(), createResponse.getError());
         studySubject.setStudySubjectLabel(createResponse.getLabel());
         return createResponse;
@@ -360,9 +372,14 @@ public class OCWebServices extends OCConnector {
      */
     public boolean studySubjectHasEvent(StudySubject studySubject, Event queryEvent)
             throws OCConnectorException {
-        // TODO: catch errors (see listAllByStudy)
         Study study = studySubject.getStudy();
-        ListAllByStudyResponse subjects = listAllByStudy(study);
+        ListAllByStudyResponse subjects;
+        try {
+            subjects = listAllByStudy(study);
+        } catch (Exception e) {
+            throw new OCConnectorException("Exception while calling OpenClinica web service." + e.getMessage(), e);
+        }
+
         boolean isSubject = false;
         if (subjects.getStudySubjects().getStudySubject() != null) {
             for (StudySubjectWithEventsType subject : subjects.getStudySubjects().getStudySubject()) {
@@ -397,16 +414,21 @@ public class OCWebServices extends OCConnector {
      * @throws IOException
      * @throws ParserConfigurationException
      */
-    public MetadataODM fetchStudyMetadata(Study study) throws OCConnectorException, ODMException, SAXException,
-            IOException, ParserConfigurationException {
-        // TODO: catch errors (see listAllByStudy)
+    public MetadataODM fetchStudyMetadata(Study study) throws OCConnectorException {
         SiteRefType siteRef = new SiteRefType();
         GetMetadataRequest request = new GetMetadataRequest();
         siteRef.setIdentifier(study.getStudyName());
         request.setStudyMetadata(siteRef);
-        GetMetadataResponse response = studyBinding.getMetadata(request);
+        GetMetadataResponse response;
+        MetadataODM ret;
+        try {
+            response = studyBinding.getMetadata(request);
+            ret = new MetadataODM(response.getOdm());
+        } catch (Exception e) {
+            throw new OCConnectorException("Exception while calling OpenClinica web service. " + e.getMessage(), e);
+        }
         checkResponseExceptions(response.getResult(), response.getError());
-        return new MetadataODM(response.getOdm());
+        return ret;
     }
 
     /**
@@ -418,7 +440,6 @@ public class OCWebServices extends OCConnector {
      * @throws DatatypeConfigurationException
      */
     public ArrayList<Event> fetchEventDefinitions(Study study) throws OCConnectorException {
-        // TODO: catch errors (see listAllByStudy)
         ArrayList<Event> result = new ArrayList<Event>();
         StudyEventDefinitionListAllType studyEventDefinitionListAllType = new StudyEventDefinitionListAllType();
         StudyRefType studyRef = new StudyRefType();
@@ -426,8 +447,14 @@ public class OCWebServices extends OCConnector {
         studyEventDefinitionListAllType.setStudyRef(studyRef);
         ListAllRequest listAllRequest = new ListAllRequest();
         listAllRequest.setStudyEventDefinitionListAll(studyEventDefinitionListAllType);
-        org.openclinica.ws.studyeventdefinition.v1.ListAllResponse listAllResponse = studyEventDefinitionBinding
-                .listAll(listAllRequest);
+        org.openclinica.ws.studyeventdefinition.v1.ListAllResponse listAllResponse;
+
+        try {
+            listAllResponse = studyEventDefinitionBinding.listAll(listAllRequest);
+        } catch (Exception e) {
+            throw new OCConnectorException("Exception while calling OpenClinica web service. " + e.getMessage(), e);
+        }
+
         checkResponseExceptions(listAllResponse.getResult(), listAllResponse.getError());
         if (listAllResponse.getStudyEventDefinitions().getStudyEventDefinition() == null) {
             throw new OCConnectorException("Cannot retreive event data or no events defined.");

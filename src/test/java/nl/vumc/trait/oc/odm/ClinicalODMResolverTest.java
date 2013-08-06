@@ -4,20 +4,11 @@
  */
 package nl.vumc.trait.oc.odm;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.StringReader;
-import java.net.URL;
-import javax.xml.datatype.DatatypeConfigurationException;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
-import javax.xml.parsers.ParserConfigurationException;
 import junit.framework.Assert;
 import nl.vumc.trait.oc.connect.ConnectInfo;
-import nl.vumc.trait.oc.connect.OCConnectorException;
 import nl.vumc.trait.oc.connect.OCWebServices;
 import org.junit.Ignore;
 import org.junit.Test;

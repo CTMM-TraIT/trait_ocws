@@ -115,23 +115,28 @@ public class ImportODM extends Main {
         } else {
             reader = new FileInputStream(file);
         }
-        ClinicalODMResolver odm = new ClinicalODMResolver(documentBuilder.parse(reader), connector, true);
-        odm.resolveOdmDocument();
-        Document odmDoc = odm.getOdm();
-        Node odmNode = odm.getOdm().getFirstChild();
+        ClinicalODMResolver resolver = new ClinicalODMResolver(documentBuilder.parse(reader), connector, true);
+        resolver.resolveOdmDocument();
+        Document odmDoc = resolver.getOdm();
+        resolver.removeEventsOnlyToSchedule(odmDoc);
+        Node odmNode = resolver.getOdm().getFirstChild();
         // bulk load -- chop up into ClinicaDatas...
-        NodeList clinicalDatas = odm.xPath(odmNode, "//ClinicalData");
+        NodeList clinicalDatas = resolver.xPath(odmNode, "//ClinicalData");
         for (int i = 0; i < clinicalDatas.getLength(); ++i) {
             odmNode.removeChild(clinicalDatas.item(i));
         }
         for (int i = 0; i < clinicalDatas.getLength(); ++i) {
-            odmNode.appendChild(clinicalDatas.item(i));
-            logger.debug("============================ setOdm start =================");
-            odm.setOdm(odmDoc); // important!
-            logger.debug("Current ODM:\n" + odm.extraClean().toString());
-            logger.debug("============================ setOdm end ===================");
-            connector.importODM(odm.extraClean().toString());
-            odmNode.removeChild(clinicalDatas.item(i));
+            if (resolver.hasEventToUpload(clinicalDatas.item(i))) {
+                odmNode.appendChild(clinicalDatas.item(i));
+                resolver.setOdm(odmDoc); // important!
+                String dataToUpload = resolver.extraClean().toString();
+                resolver.getConnector().importODM(dataToUpload);
+                odmNode.removeChild(clinicalDatas.item(i));
+                logger.info("Uploaded data to " + resolver.getConnector().getBaseURL());
+                logger.info("Data " + dataToUpload);
+            } else {
+                logger.info("No events to upload found in node.");
+            }
         }
     }
 

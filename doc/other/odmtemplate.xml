@@ -3,7 +3,7 @@
     <ClinicalData Mirth:PreliminaryConsistencyCheck="true" Mirth:TranslateOID="false" StudyOID="S_MIRTHATX">
         <SubjectData Mirth:Create="false" Mirth:TranslateOID="true" OpenClinica:DateOfBirth="&lt;VALUE&gt;" OpenClinica:DateOfRegistration="&lt;VALUE&gt;" OpenClinica:Sex="&lt;VALUE&gt;" OpenClinica:UniqueIdentifier="&lt;VALUE&gt;" SubjectKey="&lt;SUBJECT ID&gt;">
             <SiteRef LocationOID="&lt;SITE ID&gt;"/>
-            <StudyEventData OpenClinica:StartDate="&lt;VALUE&gt;" StudyEventOID="SE_UPLOADSAMPLEEVENT" StudyEventRepeatKey="&lt;VALUE&gt;">
+            <StudyEventData Mirth:ScheduleOnly="false" OpenClinica:StartDate="&lt;VALUE&gt;" StudyEventOID="SE_UPLOADSAMPLEEVENT" StudyEventRepeatKey="&lt;VALUE&gt;">
                 <FormData FormOID="F_SAMPLE_001_V1">
                     <ItemGroupData ItemGroupOID="IG_SAMPL_UNGROUPED" ItemGroupRepeatKey="&lt;VALUE&gt;" TransactionType="Insert">
                         <ItemData ItemOID="I_SAMPL_STUDYNUMBER" Mirth:Comment="Study number" Mirth:DataType="text" Mirth:ResponseType="" Value="&lt;VALUE&gt;"/>

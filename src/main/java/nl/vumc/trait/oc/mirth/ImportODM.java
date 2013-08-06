@@ -166,11 +166,9 @@ public class ImportODM extends Main {
      */
     public String process(String batch, String odmInput) throws ODMException, SAXException, IOException,
             OCConnectorException, DatatypeConfigurationException {
-        logger.debug("BLA (batch): " + batch);
-        logger.debug("BLA (odm): " + odmInput);
         InputSource reader = new InputSource(new StringReader(odmInput));
         ClinicalODMResolver resolver;
-        logger.debug("ImportODM.process(): batch: " + batch);
+
         if (resolvers.containsKey(batch)) {
             resolver = resolvers.get(batch).resolver;
         } else {
@@ -183,6 +181,7 @@ public class ImportODM extends Main {
         resolver.resolveOdmDocument();
         String resolvedODM = resolver.toString();
         Document odmDoc = resolver.getOdm();
+        resolver.removeEventsOnlyToSchedule(odmDoc);
         Node odmNode = resolver.getOdm().getFirstChild();
         // bulk load -- chop up into ClinicaDatas...
         NodeList clinicalDatas = resolver.xPath(odmNode, "//ClinicalData");
@@ -190,16 +189,17 @@ public class ImportODM extends Main {
             odmNode.removeChild(clinicalDatas.item(i));
         }
         for (int i = 0; i < clinicalDatas.getLength(); ++i) {
-            odmNode.appendChild(clinicalDatas.item(i));
-            logger.debug("============================ setOdm start =================");
-            resolver.setOdm(odmDoc); // important!
-            logger.debug("Current ODM:\n" + resolver.extraClean().toString());
-            logger.debug("============================ setOdm end ===================");
-            logger.debug("connector.import..... start");
-            logger.debug("connector.import..... connector: " + resolver.getConnector());
-            resolver.getConnector().importODM(resolver.extraClean().toString());
-            logger.debug("connector.import..... end");
-            odmNode.removeChild(clinicalDatas.item(i));
+            if (resolver.hasEventToUpload(clinicalDatas.item(i))) {
+                odmNode.appendChild(clinicalDatas.item(i));
+                resolver.setOdm(odmDoc); // important!
+                String dataToUpload = resolver.extraClean().toString();
+                resolver.getConnector().importODM(dataToUpload);
+                odmNode.removeChild(clinicalDatas.item(i));
+                logger.info("Uploaded data to " + resolver.getConnector().getBaseURL());
+                logger.info("Data " + dataToUpload);
+            } else {
+                logger.info("No events to upload found in node.");
+            }
         }
         return resolvedODM;
     }

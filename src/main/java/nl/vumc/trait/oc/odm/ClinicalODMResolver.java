@@ -20,20 +20,24 @@ package nl.vumc.trait.oc.odm;
 import java.util.Collection;
 import java.util.HashMap;
 import javax.xml.datatype.DatatypeConfigurationException;
+import javax.xml.transform.dom.DOMResult;
+import javax.xml.transform.dom.DOMSource;
+import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerConfigurationException;
 import javax.xml.transform.TransformerException;
 import nl.vumc.trait.oc.connect.OCConnectorException;
 import nl.vumc.trait.oc.connect.OCWebServices;
-import nl.vumc.trait.oc.soap.Util;
 import nl.vumc.trait.oc.types.ScheduledEvent;
 import nl.vumc.trait.oc.types.Study;
 import nl.vumc.trait.oc.types.StudySubject;
-import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 import org.openclinica.ws.study.v1.ListAllResponse;
 import org.openclinica.ws.studysubject.v1.IsStudySubjectResponse;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
+import org.w3c.dom.Element;
+import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -64,6 +68,13 @@ public class ClinicalODMResolver extends ClinicalODM {
      * element if non-existent
      */
     private static final String ATTR_MIRTH_CREATE = "Mirth:Create";
+    /**
+     * Attribute:
+     * <code>Mirth:ScheduleOnly<code>, indicates that the event only has to be
+     * scheduled and no data has to be uploaded. Located on the ODM element
+     * <code>StudyEventData</code>
+     */
+    private static final String ATTR_MIRTH_SCHEDULE_ONLY = "Mirth:ScheduleOnly";
     /**
      * Attribute: OpenClinica, data of birth
      */
@@ -195,6 +206,36 @@ public class ClinicalODMResolver extends ClinicalODM {
     }
 
     /**
+     * removes all events in a ClinicalData-node which have the attribute Mirth:
+     *
+     * @param aClinicalDataNode
+     * @return
+     */
+    public void removeEventsOnlyToSchedule(Document doc) throws ODMException {
+        NodeList eventNodeList = xPath(doc, "//StudyEventData");
+        for (int i = 0; i < eventNodeList.getLength(); i++) {
+            Node eventNode = eventNodeList.item(i);
+            if (scheduleOnly(eventNode)) {
+                Node parent = eventNode.getParentNode();
+                parent.removeChild(eventNode);
+            }
+        }
+    }
+
+    /**
+     * Returns
+     * <code>true</code> if there are child nodes
+     * <code>EventData</code> in the parent node
+     *
+     * @param aClinicalDataNode
+     * @return
+     */
+    public boolean hasEventToUpload(Node aClinicalDataNode) throws ODMException {
+        NodeList eventNodeList = xPath(aClinicalDataNode, "//StudyEventData");
+        return eventNodeList.getLength() > 0;
+    }
+
+    /**
      * Create a ClinicalODMResolver, initializing its content from a String,
      * with cleaning set to DEFAULT_CLEANING.
      *
@@ -230,6 +271,18 @@ public class ClinicalODMResolver extends ClinicalODM {
      */
     private boolean hasToBeCreated(Node node) {
         return checkBooleanAttribute(node, ATTR_MIRTH_CREATE);
+    }
+
+    /**
+     * Return boolean attribute
+     * <code>ATTR_MIRTH_SCHEDULE_ONLY</code> as bool for a certain node.
+     *
+     * @param node the nodes that supposedly has the ATTR_MIRTH_SCHEDULE_ONLY
+     * attribute
+     * @return the boolean value as bool
+     */
+    private boolean scheduleOnly(Node node) {
+        return checkBooleanAttribute(node, ATTR_MIRTH_SCHEDULE_ONLY);
     }
 
     /**
