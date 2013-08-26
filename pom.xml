@@ -4,7 +4,7 @@
 
     <groupId>nl.vumc</groupId>
     <artifactId>traitocws</artifactId>
-    <version>0.0.8-SNAPSHOT</version>
+    <version>0.0.9-SNAPSHOT</version>
     <packaging>jar</packaging>
     <name>TraIT-OCWS</name>
     <url>http://maven.apache.org</url>
@@ -80,8 +80,7 @@
                     </execution>
                 </executions>
                 <configuration>
-                    <file>target/classes/odm.sh</file>
-                    <file>target/classes/odm.bat</file>
+                    <filesToInclude>target/classes/odm.sh,target/classes/odm.bat</filesToInclude>
                     <replacements>
                         <replacement>
                             <token>project.build.jarName</token>
