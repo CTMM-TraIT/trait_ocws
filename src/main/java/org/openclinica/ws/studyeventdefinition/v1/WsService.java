@@ -49,14 +49,14 @@ public class WsService
      */
     @WebEndpoint(name = "wsSoap11")
     public Ws getWsSoap11() {
-        return super.getPort(new QName("http://openclinica.org/ws/studyEventDefiniton/v1", "wsSoap11"), Ws.class);
+        return super.getPort(new QName("http://openclinica.org/ws/studyEventDefinition/v1", "wsSoap11"), Ws.class);
     }
 
     /**
      *
      * @param features A list of {@link javax.xml.ws.WebServiceFeature} to
-     * configure on the proxy. Supported features not in
-     * the <code>features</code> parameter will have their default values.
+     * configure on the proxy. Supported features not in      * the <code>features</code> parameter will have their default
+     * values.
      * @return returns Ws
      */
     @WebEndpoint(name = "wsSoap11")

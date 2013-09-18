@@ -55,7 +55,7 @@ public class StudyEventDefinitionWsService extends WsService {
      */
     public StudyEventDefinitionWsService(String wsdlLocation) throws MalformedURLException {
         this(new URL(org.openclinica.ws.studyeventdefinition.v1.WsService.class.getResource("."), wsdlLocation),
-                new QName("http://openclinica.org/ws/studyEventDefiniton/v1", "wsService"));
+                new QName("http://openclinica.org/ws/studyEventDefinition/v1", "wsService"));
     }
 
     /**
