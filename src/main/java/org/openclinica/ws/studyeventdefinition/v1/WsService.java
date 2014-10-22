@@ -14,7 +14,7 @@ import javax.xml.ws.WebServiceFeature;
  * source version: 2.1
  *
  */
-@WebServiceClient(name = "wsService", targetNamespace = "http://openclinica.org/ws/studyEventDefinition/v1", wsdlLocation = "file://tmp/studyEventDefinitionWsdl.wsdl")
+@WebServiceClient(name = "wsService", targetNamespace = "http://openclinica.org/ws/studyEventDefiniton/v1", wsdlLocation = "file://tmp/studyEventDefinitionWsdl.wsdl")
 @SuppressWarnings("javadoc")
 public class WsService
         extends Service {
@@ -40,7 +40,7 @@ public class WsService
     }
 
     public WsService() {
-        super(WSSERVICE_WSDL_LOCATION, new QName("http://openclinica.org/ws/studyEventDefinition/v1", "wsService"));
+        super(WSSERVICE_WSDL_LOCATION, new QName("http://openclinica.org/ws/studyEventDefiniton/v1", "wsService"));
     }
 
     /**
@@ -49,7 +49,7 @@ public class WsService
      */
     @WebEndpoint(name = "wsSoap11")
     public Ws getWsSoap11() {
-        return super.getPort(new QName("http://openclinica.org/ws/studyEventDefinition/v1", "wsSoap11"), Ws.class);
+        return super.getPort(new QName("http://openclinica.org/ws/studyEventDefiniton/v1", "wsSoap11"), Ws.class);
     }
 
     /**
@@ -61,6 +61,6 @@ public class WsService
      */
     @WebEndpoint(name = "wsSoap11")
     public Ws getWsSoap11(WebServiceFeature... features) {
-        return super.getPort(new QName("http://openclinica.org/ws/studyEventDefinition/v1", "wsSoap11"), Ws.class, features);
+        return super.getPort(new QName("http://openclinica.org/ws/studyEventDefiniton/v1", "wsSoap11"), Ws.class, features);
     }
 }

@@ -23,7 +23,7 @@
 # Author: Arjan van der Velde 
 # Author: Jacob Rousseau
 
-JARFILE="project.build.jarName:log4j.jar:commons-cli.jar"
+JARFILE="${project.build.finalName}.jar:log4j.jar:commons-cli.jar"
 
 if [ "X$OC_URL" != "X" ]; then
 	OC_URL=-b"$OC_URL"

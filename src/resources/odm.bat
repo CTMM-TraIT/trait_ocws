@@ -20,7 +20,7 @@ REM 2012-2013, VU Medical Center Amsterdam
 REM Author: Arjan van der Velde 
 REM Author: Jacob Rousseau
 
-set JARFILE=traitocws-0.0.4-SNAPSHOT.jar:log4j.jar:commons-cli.jar
+set JARFILE=${project.build.finalName}.jar:log4j.jar:commons-cli.jar
 echo Classpath is: %JARFILE%
 IF NOT "X%OC_URL%" == "X" (
 	set OC_URL=-b"$OC_URL"
