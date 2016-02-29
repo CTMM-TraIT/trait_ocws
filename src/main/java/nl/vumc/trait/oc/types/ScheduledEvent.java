@@ -39,10 +39,13 @@ public class ScheduledEvent extends Event {
 	private XMLGregorianCalendar startDate;
 	/** event end date */
 	private XMLGregorianCalendar endDate;
+	
+	private XMLGregorianCalendar startTime;
+	
+	private XMLGregorianCalendar endTime;
 
 	/**
 	 * create a new event
-	 * @throws DatatypeConfigurationException
 	 */
 	public ScheduledEvent() {
 		super();
@@ -59,7 +62,6 @@ public class ScheduledEvent extends Event {
 	/**
 	 * create a new event from an Event (not scheduled).
 	 * @param event event
-	 * @throws DatatypeConfigurationException
 	 */
 	public ScheduledEvent(Event event) {
 		this();
@@ -70,13 +72,12 @@ public class ScheduledEvent extends Event {
 	/**
 	 * Create a new event from an OC EventType event
 	 * @param event the OC event to initialize from
-	 * @throws DatatypeConfigurationException
 	 */
 	public ScheduledEvent(EventType event) {
 		this();
-		setStartDate(event.getStartDate());
-		setEndDate(event.getEndDate());
-		setEventOID(event.getEventDefinitionOID());
+		this.startDate = event.getStartDate();
+		this.endDate =  event.getEndDate();
+		this.eventOID = event.getEventDefinitionOID();
 	}
 
 	/**
@@ -132,6 +133,37 @@ public class ScheduledEvent extends Event {
 	public void setEndDate(String endDate) {
 		setEndDate(dataTypeFactory.newXMLGregorianCalendar(endDate));
 	}
+
+	public XMLGregorianCalendar getStartTime() {
+		return startTime;
+	}
+
+	public void setStartTime(XMLGregorianCalendar startTime) {
+		this.startTime = startTime;
+		if (this.startTime != null) {
+			this.startTime.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
+		}
+	}
+	
+	public void setStartTime(String startTime) {
+		setStartTime(dataTypeFactory.newXMLGregorianCalendar(startTime));
+	}
+
+	public XMLGregorianCalendar getEndTime() {
+		return endTime;
+	}
+
+	public void setEndTime(XMLGregorianCalendar endTime) {
+		this.endTime = endTime;
+		if (this.endTime != null) {
+			this.endTime.setTimezone(DatatypeConstants.FIELD_UNDEFINED);
+		}
+	}
+	
+	public void setEndTime(String endTime) {
+		setEndTime(dataTypeFactory.newXMLGregorianCalendar(endTime));
+	}
+	
 
 	@Override
 	public String toString() {

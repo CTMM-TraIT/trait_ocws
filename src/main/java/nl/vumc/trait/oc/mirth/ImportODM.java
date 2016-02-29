@@ -29,6 +29,7 @@ import nl.vumc.trait.oc.connect.OCConnectorException;
 import nl.vumc.trait.oc.connect.OCWebServices;
 import nl.vumc.trait.oc.odm.ClinicalODMResolver;
 import nl.vumc.trait.oc.odm.ODMException;
+import nl.vumc.trait.oc.odm.XMLUtils;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -174,32 +175,31 @@ public class ImportODM extends Main {
         } else {
             logger.debug("ImportODM.process(): batches: " + resolvers.keySet());
             throw new OCConnectorException("No resolver for batch '" + batch + "'!");
-        }
+        }		
         Document odmDocument = documentBuilder.parse(reader);
-        logger.debug("Parsed ODM-document: " + odmDocument.toString());
         resolver.setOdm(odmDocument);
         resolver.resolveOdmDocument();
         String resolvedODM = resolver.toString();
         Document odmDoc = resolver.getOdm();
         resolver.removeEventsOnlyToSchedule(odmDoc);
         Node odmNode = resolver.getOdm().getFirstChild();
-        if (odmNode == null) {
-            // TODO - remove this if-clause one the bug is solved.
-            // This issue was created by the removeElementsOnlyToSchedule. There
-            // was an unforseen interaction between the clean step (using the
-            // XSLT CleanODMImport and the case when a ItemData-node contained
-            // the &lt;VALUE&gt; marker and the attribute Mirth:ScheduleOnly with
-            // a value of "true". The entire document is then cleaned
-            // leaving only the ODM-root node. This can be avoided by filling
-            // in a dummy value in the ItemData 'Value' attribute.
-            throw new ODMException("No data nodes found in ODM-document. When "
-                    + "using the 'Mirth:ScheduleOnly=true' construct, no "
-                    + "ItemData nodes must be present with "
-                    + " an attribute 'value' with '&lt;VALUE&gt;'. Replace "
-                    + " these with a dummy value.");
-        }
+//        if (odmNode == null) {
+//            // TODO - remove this if-clause one the bug is solved.
+//            // This issue was created by the removeElementsOnlyToSchedule. There
+//            // was an unforseen interaction between the clean step (using the
+//            // XSLT CleanODMImport and the case when a ItemData-node contained
+//            // the &lt;VALUE&gt; marker and the attribute Mirth:ScheduleOnly with
+//            // a value of "true". The entire document is then cleaned
+//            // leaving only the ODM-root node. This can be avoided by filling
+//            // in a dummy value in the ItemData 'Value' attribute.
+//            throw new ODMException("No data nodes found in ODM-document. When "
+//                    + "using the 'Mirth:ScheduleOnly=true' construct, no "
+//                    + "ItemData nodes must be present with "
+//                    + " an attribute 'value' with '&lt;VALUE&gt;'. Replace "
+//                    + " these with a dummy value.");
+//        }
         // bulk load -- chop up into ClinicaDatas...
-        NodeList clinicalDatas = resolver.xPath(odmNode, "//ClinicalData");
+        NodeList clinicalDatas = resolver.xPath(odmNode, "//cdisc:ClinicalData");
         for (int i = 0; i < clinicalDatas.getLength(); ++i) {
             odmNode.removeChild(clinicalDatas.item(i));
         }

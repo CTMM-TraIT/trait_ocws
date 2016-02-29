@@ -18,14 +18,13 @@
 
 package nl.vumc.trait.oc.odm;
 
-import java.io.InputStream;
 
 import javax.xml.transform.Transformer;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import nl.vumc.trait.oc.connect.OCConnectorException;
 import org.apache.log4j.LogManager;
 import org.apache.log4j.Logger;
 
@@ -54,9 +53,9 @@ public class ClinicalODM extends AbstractODM {
 
 	/**
 	 * Limit public access to constructor
-	 * @throws ODMException
+	 * @throws OCConnectorException
 	 */
-	protected ClinicalODM() throws ODMException {
+	protected ClinicalODM() throws OCConnectorException {
 		// to facilitate default constructor in sub classes
 		super();
 	}
@@ -65,9 +64,9 @@ public class ClinicalODM extends AbstractODM {
 	 * Construct an ODM Object from a DOM Document
 	 * @param odm ODM DOM Document
 	 * @param clean to clean or not to clean ODM
-	 * @throws ODMException 
+	 * @throws OCConnectorException 
 	 */
-	public ClinicalODM(Document odm, boolean clean) throws ODMException {
+	public ClinicalODM(Document odm, boolean clean) throws OCConnectorException {
 		super(odm);
 		if (clean) {
 			clean();
@@ -77,9 +76,9 @@ public class ClinicalODM extends AbstractODM {
 	/**
 	 * Construct an ODM Object from a DOM Document
 	 * @param odm ODM DOM Document
-	 * @throws ODMException 
+	 * @throws OCConnectorException 
 	 */
-	public ClinicalODM(Document odm) throws ODMException {
+	public ClinicalODM(Document odm) throws OCConnectorException {
 		this(odm, DEFAULT_CLEANING);
 	}
 
@@ -87,9 +86,9 @@ public class ClinicalODM extends AbstractODM {
 	 * Construct an ODM Object from a XML String representation
 	 * @param odm ODM XML String
 	 * @param clean to clean or not to clean ODM
-	 * @throws ODMException 
+	 * @throws OCConnectorException 
 	 */
-	public ClinicalODM(String odm, boolean clean) throws ODMException {
+	public ClinicalODM(String odm, boolean clean) throws OCConnectorException {
 		super(odm);
 		if (clean) {
 			setOdm(cleaningTransformation(this.odm));
@@ -99,9 +98,9 @@ public class ClinicalODM extends AbstractODM {
 	/**
 	 * Construct an ODM Object from a XML String representation
 	 * @param odm ODM XML String
-	 * @throws ODMException 
+	 * @throws OCConnectorException 
 	 */
-	public ClinicalODM(String odm) throws ODMException {
+	public ClinicalODM(String odm) throws OCConnectorException {
 		this(odm, DEFAULT_CLEANING);
 	}
 
@@ -109,16 +108,16 @@ public class ClinicalODM extends AbstractODM {
 	 * Clean Clinical ODM removing all empty template slots
 	 * @param odm Clinical ODM DOM Document
 	 * @return A cleaned version of odm
-	 * @throws ODMException 
+	 * @throws OCConnectorException 
 	 */
-	private Document cleaningTransformation(Document odm) throws ODMException {
+	private Document cleaningTransformation(Document odm) throws OCConnectorException {
 		try {			
 			Document result = documentBuilder.newDocument();
 			Transformer transformer = TransformerCache.newTransformer(ODM_XSLT);
 			transformer.transform(new DOMSource(odm), new DOMResult(result));
 			return result;
 		} catch (Exception e) {
-			throw new ODMException("Cannot clean ODM.", e);
+			throw new OCConnectorException("Cannot clean ODM.", e);
 		}
 	}
 
@@ -138,9 +137,9 @@ public class ClinicalODM extends AbstractODM {
 	/**
 	 * Clean this ClinicalODM -- perform cleaning transformation.
 	 * @return reference to "this" for convenience
-	 * @throws ODMException 
+	 * @throws OCConnectorException 
 	 */
-	public ClinicalODM clean() throws ODMException {
+	public final ClinicalODM clean() throws OCConnectorException {
 		setOdm(cleaningTransformation(this.odm));
 		removeAttributes(this.odm, "//@OpenClinica:*[.='<VALUE>']");
 		return this;
@@ -161,19 +160,19 @@ public class ClinicalODM extends AbstractODM {
 	 * @param query the xPath query
 	 * @param failIfNoneFound if set to true ODMException will be raised if the result is empty
 	 * @return yield of the query
-	 * @throws ODMException
+	 * @throws OCConnectorException
 	 */
-	public NodeList xPath(Node node, String query, boolean failIfNoneFound) throws ODMException {
+	public NodeList xPath(Node node, String query, boolean failIfNoneFound) throws OCConnectorException {
 		NodeList list;
 		try {
 			list = (NodeList) xPath.evaluate(query, node, XPathConstants.NODESET);
 			logger.debug("Node: " + node.getNodeName() + ", query: " + query + ", length: " + list.getLength());
 			if (failIfNoneFound && list.getLength() == 0) {
-				throw new ODMException("Error resolving ODM (xPath '" + query + "' on '" + node.getNodeName()
+				throw new OCConnectorException("Error resolving ODM (xPath '" + query + "' on '" + node.getNodeName()
 						+ "' returns empty nodelist!)");
 			}
 		} catch (XPathExpressionException e) {
-			throw new ODMException("Error resolving ODM!", e);
+			throw new OCConnectorException("Error resolving ODM!", e);
 		}
 		return list;
 	}
@@ -183,9 +182,9 @@ public class ClinicalODM extends AbstractODM {
 	 * @param query the xPath query
 	 * @param failIfNoneFound if set to true ODMException will be raised if the result is empty
 	 * @return yield of the query
-	 * @throws ODMException
+	 * @throws OCConnectorException
 	 */
-	public NodeList xPath(String query, boolean failIfNoneFound) throws ODMException {
+	public NodeList xPath(String query, boolean failIfNoneFound) throws OCConnectorException {
 		return xPath(odm, query, failIfNoneFound);
 	}
 
@@ -194,9 +193,9 @@ public class ClinicalODM extends AbstractODM {
 	 * @param node the node to query on 
 	 * @param query the xPath query
 	 * @return yield of the query
-	 * @throws ODMException
+	 * @throws OCConnectorException
 	 */
-	public NodeList xPath(Node node, String query) throws ODMException {
+	public NodeList xPath(Node node, String query) throws OCConnectorException {
 		return xPath(node, query, false);
 	}
 
@@ -204,9 +203,9 @@ public class ClinicalODM extends AbstractODM {
 	 * See xPath(Node node, String query), same but root node is ODM
 	 * @param query the xPath query
 	 * @return yield of the query
-	 * @throws ODMException
+	 * @throws OCConnectorException
 	 */
-	public NodeList xPath(String query) throws ODMException {
+	public NodeList xPath(String query) throws OCConnectorException {
 		return xPath(odm, query, false);
 	}
 
@@ -258,9 +257,9 @@ public class ClinicalODM extends AbstractODM {
 	 * @param node root node to operate on 
 	 * @param query query selecting the attributes to be removed
 	 * @return the number of nodes removed
-	 * @throws ODMException
+	 * @throws OCConnectorException
 	 */
-	protected int removeAttributes(Node node, String query) throws ODMException {
+	protected int removeAttributes(Node node, String query) throws OCConnectorException {
 		return removeAttributes(node, query, false);
 	}
 	
@@ -270,9 +269,9 @@ public class ClinicalODM extends AbstractODM {
 	 * @param query query selecting the attributes to be removed
 	 * @param failIfNotFound if set to true ODMException is raised if no attributes match the query
 	 * @return the number of nodes removed
-	 * @throws ODMException
+	 * @throws OCConnectorException
 	 */
-	protected int removeAttributes(Node node, String query, boolean failIfNotFound) throws ODMException {
+	protected int removeAttributes(Node node, String query, boolean failIfNotFound) throws OCConnectorException {
 		int count = 0;
 		NodeList mirthAttr = xPath(node, query, failIfNotFound);
 		for (int l = 0; l < mirthAttr.getLength(); ++l) {

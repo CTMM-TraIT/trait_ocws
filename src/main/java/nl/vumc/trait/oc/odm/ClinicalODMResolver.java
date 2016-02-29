@@ -20,11 +20,6 @@ package nl.vumc.trait.oc.odm;
 import java.util.Collection;
 import java.util.HashMap;
 import javax.xml.datatype.DatatypeConfigurationException;
-import javax.xml.transform.dom.DOMResult;
-import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.Transformer;
-import javax.xml.transform.TransformerConfigurationException;
-import javax.xml.transform.TransformerException;
 import nl.vumc.trait.oc.connect.OCConnectorException;
 import nl.vumc.trait.oc.connect.OCWebServices;
 import nl.vumc.trait.oc.types.ScheduledEvent;
@@ -36,8 +31,6 @@ import org.openclinica.ws.study.v1.ListAllResponse;
 import org.openclinica.ws.studysubject.v1.IsStudySubjectResponse;
 import org.w3c.dom.Attr;
 import org.w3c.dom.Document;
-import org.w3c.dom.Element;
-import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
@@ -49,7 +42,7 @@ import org.w3c.dom.NodeList;
  */
 public class ClinicalODMResolver extends ClinicalODM {
 
-    private Logger logger = LogManager.getLogger(ClinicalODMResolver.class);
+    private static final Logger logger = LogManager.getLogger(ClinicalODMResolver.class);
     // TODO: too many constructors here :S
     /**
      * Attribute: Mirth:TranslateOID, indicates whether or not to translate a
@@ -148,9 +141,9 @@ public class ClinicalODMResolver extends ClinicalODM {
      * Constructor.
      *
      * @param ocConnector OpenClinica web services
-     * @throws ODMException
+     * @throws OCConnectorException
      */
-    public ClinicalODMResolver(OCWebServices ocConnector) throws ODMException {
+    public ClinicalODMResolver(OCWebServices ocConnector) throws OCConnectorException {
         super();
         this.connector = ocConnector;
         studies = new HashMap<String, Study>();
@@ -208,14 +201,16 @@ public class ClinicalODMResolver extends ClinicalODM {
     /**
      * removes all events in a ClinicalData-node which have the attribute Mirth:
      *
-     * @param aClinicalDataNode
-     * @return
+     * @param doc
+	 * @throws OCConnectorException
      */
-    public void removeEventsOnlyToSchedule(Document doc) throws ODMException {
-        NodeList eventNodeList = xPath(doc, "//StudyEventData");
+    public void removeEventsOnlyToSchedule(Document doc) throws OCConnectorException {
+        NodeList eventNodeList = xPath(doc, "//cdisc:StudyEventData");
         for (int i = 0; i < eventNodeList.getLength(); i++) {
             Node eventNode = eventNodeList.item(i);
+			logger.debug("EventNode : " + XMLUtils.nodeToString(eventNode));
             if (scheduleOnly(eventNode)) {
+				logger.debug("Removing EventNode");
                 Node parent = eventNode.getParentNode();
                 parent.removeChild(eventNode);
             }
@@ -228,10 +223,11 @@ public class ClinicalODMResolver extends ClinicalODM {
      * <code>EventData</code> in the parent node
      *
      * @param aClinicalDataNode
-     * @return
+     * @return <code>true</code> if the node contains any events
+	 * @throws OCConnectorException
      */
-    public boolean hasEventToUpload(Node aClinicalDataNode) throws ODMException {
-        NodeList eventNodeList = xPath(aClinicalDataNode, "//StudyEventData");
+    public boolean hasEventToUpload(Node aClinicalDataNode) throws OCConnectorException {
+        NodeList eventNodeList = xPath(aClinicalDataNode, "//cdisc:StudyEventData");
         return eventNodeList.getLength() > 0;
     }
 
@@ -303,10 +299,9 @@ public class ClinicalODMResolver extends ClinicalODM {
      * @param study study the subject belongs to
      * @param subjectDataNode the node to be translated
      * @return a StudySubject object based on the SubjectData element supplied
-     * @throws ODMException
-     * @throws DatatypeConfigurationException
+     * @throws OCConnectorException
      */
-    private StudySubject createStudySubject(Study study, Node subjectDataNode) throws ODMException {
+    private StudySubject createStudySubject(Study study, Node subjectDataNode) throws OCConnectorException {
         NodeList attributes = xPath(subjectDataNode, XPATH_SUBJECT_ATTRS);
         StudySubject studySubject = new StudySubject(study);
         String subjectHandle = "";
@@ -487,11 +482,11 @@ public class ClinicalODMResolver extends ClinicalODM {
      * @return ref to clean "this" as a shortcut
      * @throws OCConnectorException
      * @throws ODMException
-     * @throws DatatypeConfigurationException
      */
     public int resolveOdmDocument() throws OCConnectorException, ODMException {
 
-        Node rootNode = xPath("/ODM", true).item(0);
+        Node rootNode = xPath("/cdisc:ODM", true).item(0);
+		logger.debug("Found rootNode: " + XMLUtils.nodeToString(rootNode));
         if (performPreliminaryConsistencyCheck(rootNode)) {
             resolvStudy();
             return 1;
@@ -576,9 +571,9 @@ public class ClinicalODMResolver extends ClinicalODM {
      * Clean "this" but more than with clean(), hence the name...
      *
      * @return clean version of "this" as a shortcut.
-     * @throws ODMException
+     * @throws OCConnectorException
      */
-    public ClinicalODM extraClean() throws ODMException {
+    public ClinicalODM extraClean() throws OCConnectorException {
         logger.debug("extraClean() (before): " + this);
         removeAttributes(this.odm, "//@Mirth:*");
         removeAttributes(this.odm, "//@OpenClinica:*[.='<VALUE>']");

@@ -25,6 +25,11 @@ import org.openclinica.ws.beans.EventType;
  * @author Arjan van der Velde (a.vandervelde (at) xs4all.nl)
  */
 public class Event {
+	
+	/**
+	 * The (optional) location of the event
+	 */
+	protected String location;	
 
     /**
      * name of the event
@@ -46,11 +51,10 @@ public class Event {
      * create a new event from an OC EventType object
      *
      * @param event OC event to initialize from
-     * @throws DatatypeConfigurationException
      */
     public Event(EventType event) {
         this();
-        setEventOID(event.getEventDefinitionOID());
+        this.eventOID = event.getEventDefinitionOID();
     }
 
     /**
@@ -88,10 +92,18 @@ public class Event {
     public void setEventOID(String eventOID) {
         this.eventOID = eventOID;
     }
+	
+	public String getLocation() {
+		return location;
+	}
+
+	public void setLocation(String location) {
+		this.location = location;
+	}
 
     @Override
     public String toString() {
-        return "Event: eventName: " + eventName + ", eventOID: " + eventOID;
+        return "Event: eventName: " + eventName + ", eventOID: " + eventOID + ", location: " + location;
     }
 
     @Override
@@ -103,7 +115,8 @@ public class Event {
             return false;
         }
         Event otherEvent = (Event) that;
-        return EqualsUtil.areEqual(this.eventName, otherEvent.eventName)
+        return EqualsUtil.areEqual(this.location, otherEvent.location)
+				&& EqualsUtil.areEqual(this.eventName, otherEvent.eventName)
                 && EqualsUtil.areEqual(this.eventOID, otherEvent.eventOID);
     }
 
@@ -112,6 +125,7 @@ public class Event {
         int hash = 5;
         hash = 17 * hash + (this.eventName != null ? this.eventName.hashCode() : 0);
         hash = 17 * hash + (this.eventOID != null ? this.eventOID.hashCode() : 0);
+		hash = 17 * hash + (this.location != null ? this.location.hashCode() : 0);
         return hash;
     }
 }

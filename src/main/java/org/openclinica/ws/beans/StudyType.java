@@ -7,6 +7,7 @@ import javax.xml.bind.annotation.XmlElement;
 import javax.xml.bind.annotation.XmlType;
 import javax.xml.bind.annotation.adapters.NormalizedStringAdapter;
 import javax.xml.bind.annotation.adapters.XmlJavaTypeAdapter;
+import nl.vumc.trait.oc.types.EqualsUtil;
 
 
 /**
@@ -146,6 +147,19 @@ public class StudyType {
      */
     public void setSites(SitesType value) {
         this.sites = value;
+    }
+	
+	@Override
+    public boolean equals(Object that) {
+        if (this == that) {
+            return true;
+        }
+        if (!(that instanceof StudyType)) {
+            return false;
+        }
+        StudyType otherStudy = (StudyType) that;
+        return EqualsUtil.areEqual(this.oid, otherStudy.oid);
+				
     }
 
 }

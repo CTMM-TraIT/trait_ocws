@@ -21,6 +21,9 @@ package nl.vumc.trait.oc.odm;
 import java.io.IOException;
 import java.io.StringReader;
 import java.io.StringWriter;
+import java.util.Iterator;
+import javax.xml.XMLConstants;
+import javax.xml.namespace.NamespaceContext;
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import javax.xml.transform.OutputKeys;
@@ -31,18 +34,20 @@ import javax.xml.transform.dom.DOMSource;
 import javax.xml.transform.stream.StreamResult;
 import javax.xml.xpath.XPath;
 import javax.xml.xpath.XPathFactory;
+import nl.vumc.trait.oc.connect.OCConnectorException;
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 /**
- * ODM
- * 
+ * Base class for the ODM-classes.
+ * The example for the NamespaceContext is gratefully inspired by the site:
+ * {@see http://www.ibm.com/developerworks/library/x-nmspccontext/}
  * @author Arjan van der Velde (a.vandervelde (at) xs4all.nl)
- * 
+ * @author Jacob Rousseau (j.rousseau (at) xs4all.nl)
  */
-public abstract class AbstractODM {
+public abstract class AbstractODM implements NamespaceContext {	
 
 	/** The ODM DOM Document */
 	protected Document odm;
@@ -62,9 +67,9 @@ public abstract class AbstractODM {
 
 	/**
 	 * Initialize an AbstractODM Object
-	 * @throws ODMException 
+	 * @throws OCConnectorException 
 	 */
-	protected AbstractODM() throws ODMException {
+	protected AbstractODM() throws OCConnectorException {
 		try {
 			documentBuilderFactory = DocumentBuilderFactory.newInstance();
 			documentBuilderFactory.setValidating(false);
@@ -72,34 +77,34 @@ public abstract class AbstractODM {
 			documentBuilder = documentBuilderFactory.newDocumentBuilder();
 			transformerFactory = TransformerFactory.newInstance();
 			xPathFactory = XPathFactory.newInstance();
-			xPath = xPathFactory.newXPath();
+			xPath = xPathFactory.newXPath();						
 			xPath.setNamespaceContext(new NSContext()); // <- important too!
 		} catch (Exception e) {
-			throw new ODMException("Cannot instantiate ODM object.", e);
+			throw new OCConnectorException("Cannot instantiate ODM object.", e);
 		}
 	}
 
 	/**
 	 * Construct an ODM Object from a DOM Document
 	 * @param odm ODM DOM Document
-	 * @throws ODMException 
+	 * @throws OCConnectorException 
 	 */
-	public AbstractODM(Document odm) throws ODMException {
+	public AbstractODM(Document odm) throws OCConnectorException {
 		this();
-		setOdm(odm);
+		this.odm = odm;
 	}
 
 	/**
 	 * Construct an ODM Object from a XML String representation
 	 * @param odm ODM XML String
-	 * @throws ODMException 
+	 * @throws OCConnectorException 
 	 */
-	public AbstractODM(String odm) throws ODMException {
+	public AbstractODM(String odm) throws OCConnectorException {
 		this();
 		try {
-			setOdm(stringToDocument(odm));
+			this.odm = stringToDocument(odm);
 		} catch (Exception e) {
-			throw new ODMException("Cannot instantiate ODM object.", e);
+			throw new OCConnectorException("Cannot instantiate ODM object.", e);
 		}
 	}
 
@@ -114,9 +119,8 @@ public abstract class AbstractODM {
 	/**
 	 * Set ODM
 	 * @param odm ODM DOM Document
-	 * @throws ODMException 
 	 */
-	public void setOdm(Document odm) throws ODMException {
+	public void setOdm(Document odm) {
 		this.odm = odm;
 	}
 
@@ -127,7 +131,7 @@ public abstract class AbstractODM {
 	 * @throws SAXException 
 	 * @throws IOException 
 	 */
-	protected Document stringToDocument(String s) throws SAXException, IOException {
+	protected final Document stringToDocument(String s) throws SAXException, IOException {
 		StringReader stringReader = new StringReader(s);
 		Document result = documentBuilder.parse(new InputSource(stringReader));
 		return result;
@@ -155,6 +159,28 @@ public abstract class AbstractODM {
 		} catch (TransformerException e) {
 			e.printStackTrace();
 		}
+		return null;
+	}
+	
+	
+	@Override
+	public String getNamespaceURI(String prefix) {
+		if (prefix.equals(XMLConstants.DEFAULT_NS_PREFIX)) {
+            return odm.lookupNamespaceURI(null);
+        } else {
+            return odm.lookupNamespaceURI(prefix);
+        }
+	}
+
+	@Override
+	public String getPrefix(String namespaceURI) {
+		return odm.lookupPrefix(namespaceURI);
+	}
+
+	@Override
+	public Iterator getPrefixes(String namespaceURI) {
+		// the example at http://www.ibm.com/developerworks/library/x-nmspccontext/ 
+		// returns null. Is this correct?
 		return null;
 	}
 

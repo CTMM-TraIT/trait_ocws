@@ -18,20 +18,16 @@
 
 package nl.vumc.trait.oc.odm;
 
-import java.io.IOException;
-import java.io.InputStream;
-
-import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.transform.Transformer;
+import javax.xml.transform.TransformerException;
 import javax.xml.transform.dom.DOMResult;
 import javax.xml.transform.dom.DOMSource;
-import javax.xml.transform.stream.StreamSource;
 import javax.xml.xpath.XPathConstants;
 import javax.xml.xpath.XPathExpressionException;
+import nl.vumc.trait.oc.connect.OCConnectorException;
 
 import org.w3c.dom.Document;
 import org.w3c.dom.NodeList;
-import org.xml.sax.SAXException;
 
 /**
  * ODM Metadata
@@ -50,10 +46,9 @@ public class MetadataODM extends AbstractODM {
 	 * Construct a new MetadataODM from a DOM Document
 	 * 
 	 * @param odm The XML document
-	 * @throws ODMException 
-	 * @throws ParserConfigurationException 
+	 * @throws OCConnectorException 
 	 */
-	public MetadataODM(Document odm) throws ODMException, ParserConfigurationException {
+	public MetadataODM(Document odm) throws OCConnectorException {
 		super(odm);
 	}
 
@@ -61,35 +56,41 @@ public class MetadataODM extends AbstractODM {
 	 * Construct a new MetadataODM from String XML representation
 	 * 
 	 * @param odm The String representation of ODM metadata XML
-	 * @throws ODMException 
-	 * @throws SAXException 
-	 * @throws IOException 
-	 * @throws ParserConfigurationException 
+	 * @throws OCConnectorException
 	 */
-	public MetadataODM(String odm) throws ODMException, SAXException, IOException, ParserConfigurationException {
+	public MetadataODM(String odm) throws OCConnectorException {
 		super(odm);
 	}
 
 	/**
 	 * Transform ODM metadata into a template for ODM data loading
 	 * @return the resulting template DOM Document
-	 * @throws ODMException 
+	 * @throws OCConnectorException 
 	 */
-	public ClinicalODM getClinicalTemplate() throws ODMException {		
+	public ClinicalODM getClinicalTemplate() throws OCConnectorException {		
 		Document result = documentBuilder.newDocument();
 		try {
 			Transformer transformer = TransformerCache.newTransformer(ODM_XSLT);
-			transformer.transform(new DOMSource(this.odm), new DOMResult(result));
+			transformer.transform(new DOMSource(getOdm()), new DOMResult(result));
 			return new ClinicalODM(result, false);
-		} catch (Exception e) {
-			throw new ODMException(e);
+		} 
+		catch (TransformerException te) {
+			throw new OCConnectorException(te);
+		}
+	}
+	
+	public NodeList evalXPath(String xPathExperssion) throws OCConnectorException {
+		try {
+			return (NodeList) xPath.evaluate(xPathExperssion, getOdm(), XPathConstants.NODESET);
+		} catch (XPathExpressionException e) {
+			throw new OCConnectorException(e);
 		}
 	}
 
 	@Override
 	public NodeList getStudyOID() throws ODMException {
 		try {
-			return (NodeList) xPath.evaluate("/cdisc:ODM/cdisc:Study/@OID", odm, XPathConstants.NODESET);
+			return (NodeList) xPath.evaluate("/cdisc:ODM/cdisc:Study/@OID", getOdm(), XPathConstants.NODESET);
 		} catch (XPathExpressionException e) {
 			throw new ODMException(e);
 		}

@@ -1,7 +1,12 @@
-!/target/trait_ocws-1.0-SNAPSHOT.jar
-!/target/traitocws-0.0.1-SNAPSHOT.jar
+!/target/trait_ocws*.jar
+!/target/odm.bat
+!/target/odm.sh
 /distribution/traitocws-0.0.2-SNAPSHOT.jar
 /target/classes/
+/target/maven-archiver/
+/target/test-classes/
 /target/surefire-reports/
 /target/generated-sources/
 /unpack-dir/
+/**/*.class
+/**/*.jar
